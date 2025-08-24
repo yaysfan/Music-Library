@@ -1,5 +1,6 @@
 package com.yayfan.music.persistence.artist;
 
+import com.yayfan.music.domain.artist.Artist;
 import com.yayfan.music.persistence.AbstractEntity;
 import com.yayfan.music.persistence.song.SongEntity;
 import com.yayfan.music.persistence.user.UserEntity;
