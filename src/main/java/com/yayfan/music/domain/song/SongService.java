@@ -5,7 +5,6 @@ import com.yayfan.music.domain.artist.Artist;
 import com.yayfan.music.domain.file.FileAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
