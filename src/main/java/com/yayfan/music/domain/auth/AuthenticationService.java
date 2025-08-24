@@ -1,5 +1,8 @@
 package com.yayfan.music.domain.auth;
 
+import com.yayfan.music.api.auth.LoginRequestDto;
+import com.yayfan.music.api.auth.LoginResponseDto;
+import com.yayfan.music.api.auth.SignUpRequestDto;
 import com.yayfan.music.configuration.JwtService;
 import com.yayfan.music.domain.artist.Artist;
 import com.yayfan.music.domain.artist.ArtistStorage;
