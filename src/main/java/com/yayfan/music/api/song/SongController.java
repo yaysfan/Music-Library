@@ -32,29 +32,18 @@ public class SongController {
     public void uploadSong(
             @ModelAttribute NewSongRequestDto request,
             @AuthenticationPrincipal UserDetails userDetails
-    ) throws IOException {
+    )  {
         String username = userDetails.getUsername();
-        Artist artist = artistService.findByUsername(username).orElseThrow();
-
-        if (!Objects.equals(request.getFile().getContentType(), "audio/mpeg")) {
-            throw new IllegalArgumentException("File must be a mp3 file");
-        }
-
+        Artist artist = artistService.findByUsername(username);
         songService.createSong(request, artist);
     }
 
     @GetMapping("{songId}")
     public ResponseEntity<?> downloadSong(@PathVariable("songId") Integer id) {
-        Optional<Song> song = songService.getSong(id);
+        Song song = songService.findById(id);
+        InputStreamResource resource = new InputStreamResource(songService.loadSong(song.getFile()));
 
-        if (song.isEmpty()) {
-            return new ResponseEntity<>("Song not found", HttpStatus.NOT_FOUND);
-        }
-
-        String fileName = song.get().getFile();
-        InputStreamResource resource = new InputStreamResource(songService.loadSong(fileName));
-
-        String headerValue = "attachment; filename=\"" + fileName + "\"";
+        String headerValue = "attachment; filename=\"" + song.getFile() + "\"";
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
                 .body(resource);

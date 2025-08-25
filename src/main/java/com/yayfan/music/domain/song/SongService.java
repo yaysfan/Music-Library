@@ -3,11 +3,14 @@ package com.yayfan.music.domain.song;
 import com.yayfan.music.api.song.NewSongRequestDto;
 import com.yayfan.music.domain.artist.Artist;
 import com.yayfan.music.domain.file.FileAdapter;
+import com.yayfan.music.domain.file.FileAdapterException;
+import com.yayfan.music.domain.file.InvalidFileTypeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,27 +20,38 @@ public class SongService {
     private final SongStorage songStorage;
     private final FileAdapter fileAdapter;
 
-    public void createSong(NewSongRequestDto dto, Artist artist) throws IOException {
+    public void createSong(NewSongRequestDto dto, Artist artist)
+            throws FileAdapterException, InvalidFileTypeException {
+        if (!Objects.equals(dto.getFile().getContentType(), "audio/mpeg")) {
+            throw new InvalidFileTypeException("File must be a mp3 file");
+        }
+
+        String fileName = UUID.randomUUID() + ".mp3";
+        fileAdapter.save(fileName, dto.getFileData());
         Song song = Song.builder()
                 .name(dto.getName())
                 .genre(dto.getGenre())
-                .file(UUID.randomUUID() + ".mp3")
+                .file(fileName)
                 .artist(artist)
                 .build();
         songStorage.save(song);
-
-        fileAdapter.save(song.getFile(), dto.getFile().getInputStream());
     }
 
-    public Optional<Song> getSong(Integer id) {
-        return songStorage.findById(id);
+    public Song findById(Integer id) throws SongNotFoundException {
+        return songStorage.findById(id)
+                .orElseThrow(SongNotFoundException::new);
     }
 
-    public InputStream loadSong(String fileName) {
+    public InputStream loadSong(String fileName) throws FileAdapterException {
         return fileAdapter.load(fileName);
+    }
+
+    public void deleteSong(Song song) {
+        fileAdapter.delete(song.getFile());
     }
 
     public List<Song> searchSongs(String search) {
         return songStorage.search(search);
     }
+
 }
