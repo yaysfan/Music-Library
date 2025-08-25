@@ -1,6 +1,5 @@
 package com.yayfan.music.domain.song;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yayfan.music.domain.artist.Artist;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

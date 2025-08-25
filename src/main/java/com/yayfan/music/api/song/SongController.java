@@ -15,9 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -29,13 +27,16 @@ public class SongController {
 
     @PostMapping()
     @Secured("ARTIST")
-    public void uploadSong(
+    @ResponseStatus(HttpStatus.CREATED)
+    public String uploadSong(
             @ModelAttribute NewSongRequestDto request,
             @AuthenticationPrincipal UserDetails userDetails
     )  {
         String username = userDetails.getUsername();
         Artist artist = artistService.findByUsername(username);
-        songService.createSong(request, artist);
+        Song song = songService.createSong(request, artist);
+
+        return "Song created with id " + song.getId();
     }
 
     @GetMapping("{songId}")
