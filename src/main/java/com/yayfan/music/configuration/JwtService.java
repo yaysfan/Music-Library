@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     //실제 서비스 시에 설정 파일로 뺄것
-    private static final String SECRET_KEY = "12345";
+    private static final String SECRET_KEY = "aa19bb2a86a7b7cb2b6aaa12423a249ba5f3e5f9e26f5d3430af9124d40757b0";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
