@@ -1,10 +1,10 @@
-package com.yayfan.music.api.song;
+package com.yayfan.music.domain.song;
 
 import lombok.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 @Value
-public class NewSongRequestDto {
+public class NewSongRequest {
     String name;
     String genre;
     MultipartFile file;

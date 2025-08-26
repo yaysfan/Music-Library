@@ -1,16 +1,10 @@
 package com.yayfan.music.api.auth;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Value
 public class SignUpRequestDto {
-    private String username;
-    private String password;
-    private String artistName;
+    String username;
+    String password;
+    String artistName;
 }

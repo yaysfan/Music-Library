@@ -48,7 +48,7 @@ public class SongServiceTest {
                 .artistName("Artist")
                 .id(1)
                 .build();
-        NewSongRequestDto dto = new NewSongRequestDto(songName, genre, multipartFile);
+        NewSongRequest dto = new NewSongRequest(songName, genre, multipartFile);
 
         // When
         when(songStorage.save(any(Song.class))).thenAnswer(i -> i.getArgument(0));

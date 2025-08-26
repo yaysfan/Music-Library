@@ -7,11 +7,9 @@ import com.yayfan.music.domain.file.FileAdapterException;
 import com.yayfan.music.domain.file.InvalidFileTypeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -20,17 +18,17 @@ public class SongService {
     private final SongStorage songStorage;
     private final FileAdapter fileAdapter;
 
-    public Song createSong(NewSongRequestDto dto, Artist artist)
+    public Song createSong(NewSongRequest request, Artist artist)
             throws FileAdapterException, InvalidFileTypeException {
-        if (!Objects.equals(dto.getFile().getContentType(), "audio/mpeg")) {
+        if (!Objects.equals(request.getFile().getContentType(), "audio/mpeg")) {
             throw new InvalidFileTypeException("File must be a mp3 file");
         }
 
         String fileName = UUID.randomUUID() + ".mp3";
-        fileAdapter.save(fileName, dto.getFileData());
+        fileAdapter.save(fileName, fileAdapter.getStream(request.getFile()));
         Song song = Song.builder()
-                .name(dto.getName())
-                .genre(dto.getGenre())
+                .name(request.getName())
+                .genre(request.getGenre())
                 .file(fileName)
                 .artist(artist)
                 .build();

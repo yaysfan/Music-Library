@@ -1,0 +1,9 @@
+package architecture;
+
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public class NamingConventions {
+    static final String BASE_PACKAGE = "com.yayfan.music";
+    static final String DOMAIN_PACKAGE = BASE_PACKAGE + ".domain..";
+}

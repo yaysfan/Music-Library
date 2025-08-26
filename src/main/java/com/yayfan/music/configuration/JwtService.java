@@ -1,5 +1,6 @@
 package com.yayfan.music.configuration;
 
+import com.yayfan.music.domain.auth.JwtAdapter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @Service
-public class JwtService {
+public class JwtService implements JwtAdapter {
     //실제 서비스 시에 설정 파일로 뺄것
     private static final String SECRET_KEY = "aa19bb2a86a7b7cb2b6aaa12423a249ba5f3e5f9e26f5d3430af9124d40757b0";
 

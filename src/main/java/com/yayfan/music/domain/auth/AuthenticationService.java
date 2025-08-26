@@ -1,9 +1,5 @@
 package com.yayfan.music.domain.auth;
 
-import com.yayfan.music.api.auth.LoginRequestDto;
-import com.yayfan.music.api.auth.LoginResponseDto;
-import com.yayfan.music.api.auth.SignUpRequestDto;
-import com.yayfan.music.configuration.JwtService;
 import com.yayfan.music.domain.artist.Artist;
 import com.yayfan.music.domain.artist.ArtistStorage;
 import com.yayfan.music.domain.user.Role;
@@ -21,10 +17,10 @@ public class AuthenticationService {
     private final ArtistStorage artistStorage;
     private final UserStorage userStorage;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final JwtAdapter jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public LoginResponseDto register(SignUpRequestDto request) {
+    public String register(SignUpRequest request) {
         User user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -37,13 +33,10 @@ public class AuthenticationService {
                 .build();
 
         artistStorage.save(artist);
-        String jwtToken = jwtService.generateToken(user);
-        return LoginResponseDto.builder()
-                .token(jwtToken)
-                .build();
+        return jwtService.generateToken(artist.getUser());
     }
 
-    public LoginResponseDto authenticate(LoginRequestDto request) {
+    public String authenticate(AuthRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -52,9 +45,6 @@ public class AuthenticationService {
         );
 
         User user = userStorage.findByUsername(request.getUsername()).orElseThrow();
-        String jwtToken = jwtService.generateToken(user);
-        return LoginResponseDto.builder()
-                .token(jwtToken)
-                .build();
+        return jwtService.generateToken(user);
     }
 }
