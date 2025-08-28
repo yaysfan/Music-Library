@@ -32,6 +32,13 @@
 
 	<dependencies>
 
+		<!-- JobRunr -->
+		<dependency>
+			<groupId>org.jobrunr</groupId>
+			<artifactId>jobrunr-spring-boot-3-starter</artifactId>
+			<version>6.2.3</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.tngtech.archunit</groupId>
 			<artifactId>archunit-junit5</artifactId>

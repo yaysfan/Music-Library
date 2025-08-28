@@ -3,8 +3,11 @@ package com.yayfan.music.domain.file;
 import org.springframework.core.io.InputStreamSource;
 
 import java.io.InputStream;
+import java.util.List;
 
 public interface FileAdapter {
+
+    List<String> listFiles() throws FileAdapterException;
 
     InputStream getStream(InputStreamSource file) throws FileAdapterException;
 
