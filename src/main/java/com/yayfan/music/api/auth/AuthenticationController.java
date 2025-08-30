@@ -3,7 +3,9 @@ package com.yayfan.music.api.auth;
 import com.yayfan.music.domain.auth.AuthRequest;
 import com.yayfan.music.domain.auth.AuthenticationService;
 import com.yayfan.music.domain.auth.SignUpRequest;
+import com.yayfan.music.integration.mail.template.NewUserMail;
 import lombok.RequiredArgsConstructor;
+import org.jobrunr.scheduling.BackgroundJob;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,12 +15,15 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     private final AuthenticationService service;
     private final AuthenticationMapper mapper;
+    private final NewUserMail newUserMail;
 
     @PostMapping("/sign-up")
     @ResponseStatus(HttpStatus.OK)
     public AuthResponseDto register(@RequestBody SignUpRequestDto request) {
         SignUpRequest signupRequest = mapper.toSignUpRequest(request);
-        return new AuthResponseDto(service.register(signupRequest));
+        String token = service.register(signupRequest);
+        BackgroundJob.enqueue(() -> newUserMail.sendMail(request.getUsername()));
+        return new AuthResponseDto(token);
     }
 
     @PostMapping("/login")
