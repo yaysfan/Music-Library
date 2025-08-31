@@ -3,6 +3,7 @@ package com.yayfan.music.integration.file;
 import com.yayfan.music.domain.file.FileAdapter;
 import com.yayfan.music.domain.file.FileAdapterException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
@@ -15,11 +16,12 @@ import java.util.List;
 @Component
 @Slf4j
 public class FileStore implements FileAdapter {
-    private static final String BASE_PATH = "./songs";
+    @Value("${config.file.base-path}")
+    private String basePath;
 
     @Override
     public List<String> listFiles() throws FileAdapterException {
-        try (var files = Files.walk(Paths.get(BASE_PATH))) {
+        try (var files = Files.walk(Paths.get(basePath))) {
             return files
                     .filter(Files::isRegularFile)
                     .map(Path::getFileName)
@@ -41,7 +43,7 @@ public class FileStore implements FileAdapter {
 
     @Override
     public void save(String fileName, InputStream inputStream) throws FileAdapterException {
-        Path path = Paths.get(BASE_PATH, fileName);
+        Path path = Paths.get(basePath, fileName);
         try {
             Files.createDirectories(path.getParent());
             Files.copy(inputStream, path);
@@ -52,7 +54,7 @@ public class FileStore implements FileAdapter {
 
     @Override
     public InputStream load(String fileName) throws FileAdapterException {
-        Path path = Paths.get(BASE_PATH, fileName);
+        Path path = Paths.get(basePath, fileName);
         try {
             return Files.newInputStream(path);
         } catch (IOException e) {
@@ -62,7 +64,7 @@ public class FileStore implements FileAdapter {
 
     @Override
     public void delete(String fileName) {
-        Path path = Paths.get(BASE_PATH, fileName);
+        Path path = Paths.get(basePath, fileName);
         try {
             Files.delete(path);
         } catch (IOException e) {
