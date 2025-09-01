@@ -3,7 +3,7 @@ package com.yayfan.music.api.artist;
 import com.yayfan.music.domain.artist.ArtistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class ArtistController {
         );
     }
 
-    @Secured("ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("{artistId}")
     public void deleteArtist(@PathVariable("artistId") Integer id) {
         service.deleteArtist(id);

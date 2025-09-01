@@ -1,21 +1,21 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/music
-    username: yaysfan
-    password: 1234
-    driver-class-name: org.postgresql.Driver
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    properties:
+  spring:
+    datasource:
+      url: jdbc:postgresql://localhost:5432/music
+      username: yaysfan
+      password: 1234
+      driver-class-name: org.postgresql.Driver
+    servlet:
+      multipart:
+        max-file-size: 10MB
+        max-request-size: 10MB
+    jpa:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-    show-sql: true
+        ddl-auto: create-drop
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+          format_sql: true
+      show-sql: true
   springdoc:
     swagger-ui:
       enabled: true
@@ -29,5 +29,8 @@ spring:
     file:
       base-path: "./songs"
     jwt:
-      expiration: 86400000
-      secret-key: "aa19bb2a86a7b7cb2b6aaa12423a249ba5f3e5f9e26f5d3430af9124d40757b0"
+      private:
+        key: classpath:app.key
+      public:
+        key: classpath:app.pub
+      expiration: 86400 # in seconds
