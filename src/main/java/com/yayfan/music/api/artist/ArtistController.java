@@ -7,7 +7,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/artists")
@@ -18,10 +17,8 @@ public class ArtistController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<SearchedArtistDto> searchArtists(@RequestBody Optional<String> search) {
-        return mapper.toSearchedArtistDto(
-                service.searchArtists(search.orElse(""))
-        );
+    public List<SearchedArtistDto> searchArtists(@RequestParam(defaultValue = "") String search) {
+        return mapper.toSearchedArtistDto(service.searchArtists(search));
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

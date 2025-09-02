@@ -51,8 +51,8 @@ public class SongController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<SearchedSongDto> searchSongs(@RequestBody Optional<String> search) {
-        List<Song> songs = songService.searchSongs(search.orElse(""));
+    public List<SearchedSongDto> searchSongs(@RequestParam(defaultValue = "") String search) {
+        List<Song> songs = songService.searchSongs(search);
         return songMapper.toSearchSongDto(songs);
     }
 }
