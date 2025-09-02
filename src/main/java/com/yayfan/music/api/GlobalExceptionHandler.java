@@ -1,6 +1,7 @@
 package com.yayfan.music.api;
 
 import com.yayfan.music.domain.artist.ArtistNotFoundException;
+import com.yayfan.music.domain.auth.UsernameTakenException;
 import com.yayfan.music.domain.file.FileAdapterException;
 import com.yayfan.music.domain.file.InvalidFileTypeException;
 import com.yayfan.music.domain.song.SongNotFoundException;
@@ -30,5 +31,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InvalidFileTypeException.class)
     public ResponseEntity<Object> handleInvalidFileTypeException(InvalidFileTypeException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(UsernameTakenException.class)
+    public ResponseEntity<Object> handleUsernameTakenException(UsernameTakenException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
