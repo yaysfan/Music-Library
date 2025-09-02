@@ -2,22 +2,11 @@ package com.yayfan.music.api.auth;
 
 import com.yayfan.music.domain.auth.AuthRequest;
 import com.yayfan.music.domain.auth.SignUpRequest;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
-@Component
-public class AuthenticationMapper {
-    public AuthRequest toAuthRequest(LoginRequestDto request) {
-        return new AuthRequest(
-                request.getUsername(),
-                request.getPassword()
-        );
-    }
+@Mapper(componentModel = "spring")
+public interface AuthenticationMapper {
+    AuthRequest toAuthRequest(LoginRequestDto request);
 
-    public SignUpRequest toSignUpRequest(SignUpRequestDto request) {
-        return new SignUpRequest(
-                request.getUsername(),
-                request.getPassword(),
-                request.getArtistName()
-        );
-    }
+    SignUpRequest toSignUpRequest(SignUpRequestDto request);
 }
