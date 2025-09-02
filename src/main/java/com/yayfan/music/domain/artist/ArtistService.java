@@ -3,11 +3,13 @@ package com.yayfan.music.domain.artist;
 import com.yayfan.music.domain.song.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Transactional(readOnly=true)
 public class ArtistService {
     private final ArtistStorage artistStorage;
     private final SongService songService;
@@ -21,6 +23,7 @@ public class ArtistService {
         return artistStorage.searchArtists(search);
     }
 
+    @Transactional
     public void deleteArtist(Integer id) throws ArtistNotFoundException {
         var songs = artistStorage.findById(id)
                 .orElseThrow(ArtistNotFoundException::new)
