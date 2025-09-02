@@ -28,14 +28,14 @@ public class SongController {
     @PostMapping()
     @PreAuthorize("hasAuthority('ARTIST')")
     @ResponseStatus(HttpStatus.CREATED)
-    public String uploadSong(
+    public SongDto  uploadSong(
             @ModelAttribute NewSongRequestDto request,
             Authentication authentication
     )  {
         Artist artist = artistService.findByUsername(authentication.getName());
         Song song = songService.createSong(songMapper.toNewSongRequest(request), artist);
 
-        return "Song created with id " + song.getId();
+        return songMapper.toSongDto(song);
     }
 
     @GetMapping("{songId}")

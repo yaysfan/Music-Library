@@ -15,4 +15,6 @@ public interface SongMapper {
     List<SearchedSongDto> toSearchSongDto(List<Song> songs);
 
     NewSongRequest toNewSongRequest(NewSongRequestDto dto);
+
+    SongDto toSongDto(Song song);
 }

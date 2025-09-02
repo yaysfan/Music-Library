@@ -25,6 +25,8 @@
     jobrunr:
       background-job-server:
         enabled: true
+      dashboard:
+        enabled: true
   config:
     file:
       base-path: "./songs"
@@ -34,3 +36,6 @@
       public:
         key: classpath:app.pub
       expiration: 86400 # in seconds
+    jobs:
+      clear-songs:
+        cron: "*/5 * * * *" # every 5 minutes, see https://crontab.guru
