@@ -1,6 +1,5 @@
 package com.yayfan.music.persistence.artist;
 
-import com.yayfan.music.domain.artist.Artist;
 import com.yayfan.music.persistence.AbstractEntity;
 import com.yayfan.music.persistence.song.SongEntity;
 import com.yayfan.music.persistence.user.UserEntity;
@@ -10,7 +9,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
-import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
 @Data
 @SuperBuilder(toBuilder = true)
@@ -29,28 +27,4 @@ public class ArtistEntity extends AbstractEntity {
 
     @OneToMany(mappedBy = "artist", cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
     private List<SongEntity> songs;
-
-    public static ArtistEntity from(Artist artist) {
-        return ArtistEntity.builder()
-                .id(artist.getId())
-                .artistName(artist.getArtistName())
-                .user(UserEntity.from(artist.getUser()))
-//                .songs(emptyIfNull(artist.getSongs())
-//                        .stream()
-//                        .map(SongEntity::from)
-//                        .toList())
-                .build();
-    }
-
-    public Artist fromThis() {
-        return Artist.builder()
-                .id(getId())
-                .artistName(getArtistName())
-                .user(getUser().fromThis())
-                .songs(emptyIfNull(getSongs())
-                        .stream()
-                        .map(s -> s.fromThis(false))
-                        .toList())
-                .build();
-    }
 }

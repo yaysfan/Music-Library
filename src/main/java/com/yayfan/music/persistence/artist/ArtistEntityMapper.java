@@ -1,0 +1,17 @@
+package com.yayfan.music.persistence.artist;
+
+import com.yayfan.music.domain.artist.Artist;
+import com.yayfan.music.persistence.song.SongEntityMapper;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+
+@Named("ArtistEntityMapper")
+@Mapper(componentModel = "spring", uses = SongEntityMapper.class)
+public interface ArtistEntityMapper {
+    @Mapping(target = "songs", ignore = true)
+    ArtistEntity toEntity(Artist artist);
+
+    @Mapping(target = "songs", qualifiedByName = "toDomainWithoutArtist")
+    Artist toDomain(ArtistEntity entity);
+}
