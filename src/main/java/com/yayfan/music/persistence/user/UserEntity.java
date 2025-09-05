@@ -1,15 +1,13 @@
 package com.yayfan.music.persistence.user;
 
 import com.yayfan.music.domain.user.Role;
-import com.yayfan.music.domain.user.User;
 import com.yayfan.music.persistence.AbstractEntity;
 import com.yayfan.music.persistence.artist.ArtistEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
-@Data
-@SuperBuilder(toBuilder = true)
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)

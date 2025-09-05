@@ -5,16 +5,13 @@ import com.yayfan.music.persistence.song.SongEntity;
 import com.yayfan.music.persistence.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
-
-@Data
-@SuperBuilder(toBuilder = true)
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "artists")
 public class ArtistEntity extends AbstractEntity {
