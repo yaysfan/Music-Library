@@ -5,6 +5,7 @@ import com.yayfan.music.domain.artist.Artist;
 import com.yayfan.music.domain.artist.ArtistService;
 import com.yayfan.music.domain.song.Song;
 import com.yayfan.music.domain.song.SongService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +30,7 @@ public class SongController {
     @PreAuthorize("hasAuthority('ARTIST')")
     @ResponseStatus(HttpStatus.CREATED)
     public SongDto  uploadSong(
-            @ModelAttribute NewSongRequestDto request,
+            @Valid @ModelAttribute NewSongRequestDto request,
             Authentication authentication
     )  {
         Artist artist = artistService.findByUsername(authentication.getName());
