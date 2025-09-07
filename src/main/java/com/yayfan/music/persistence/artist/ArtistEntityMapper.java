@@ -1,7 +1,6 @@
 package com.yayfan.music.persistence.artist;
 
 import com.yayfan.music.domain.artist.Artist;
-import com.yayfan.music.persistence.song.SongEntityMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

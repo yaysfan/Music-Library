@@ -45,7 +45,8 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                HttpMethod.GET, "/api/v1/songs/**"
+                                HttpMethod.GET, "/api/v1/songs/**",
+                                                "/songs/**"
                         )
                         .permitAll()
                         .requestMatchers(

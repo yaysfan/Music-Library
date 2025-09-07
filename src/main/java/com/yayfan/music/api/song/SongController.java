@@ -8,8 +8,10 @@ import com.yayfan.music.domain.song.SongService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,7 +28,7 @@ public class SongController {
     private final SongService songService;
     private final SongMapper songMapper;
 
-    @PostMapping()
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('ARTIST')")
     @ResponseStatus(HttpStatus.CREATED)
     public SongDto  uploadSong(
@@ -55,5 +57,15 @@ public class SongController {
     public List<SearchedSongDto> searchSongs(@RequestParam(defaultValue = "") String search) {
         List<Song> songs = songService.searchSongs(search);
         return songMapper.toSearchSongDto(songs);
+    }
+
+    @GetMapping("/play/{songId}")
+    public ResponseEntity<Resource> playSong(@PathVariable("songId") Integer id) {
+        Song song = songService.findById(id);
+        Resource resource = new InputStreamResource(songService.loadSong(song.getFile()));
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("audio/mpeg"))
+                .body(resource);
     }
 }

@@ -5,6 +5,7 @@ import com.yayfan.music.persistence.artist.ArtistEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,6 +24,7 @@ public class SongEntity extends AbstractEntity {
     private String genre;
 
 
+    @ToString.Exclude
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
     @JoinColumn(name = "artist_id")
     private ArtistEntity artist;

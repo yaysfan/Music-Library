@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.util.List;
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,6 +23,7 @@ public class ArtistEntity extends AbstractEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "artist", cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
     private List<SongEntity> songs;
 }
