@@ -22,6 +22,7 @@ public class SongWebController {
 
     @GetMapping("/songs")
     public String getSongPage(Model model, Authentication authentication) {
+        System.out.println(authentication);
         String name = authentication.getName();
         model.addAttribute("songs", songService.findSongsByArtistName(name));
         return "songs";
