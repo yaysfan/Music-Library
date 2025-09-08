@@ -18,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/songs")
@@ -56,6 +55,12 @@ public class SongController {
     @ResponseStatus(HttpStatus.OK)
     public List<SearchedSongDto> searchSongs(@RequestParam(defaultValue = "") String search) {
         List<Song> songs = songService.searchSongs(search);
+        return songMapper.toSearchSongDto(songs);
+    }
+
+    @GetMapping("/by-artist")
+    public List<SearchedSongDto> searchSongsByArtistName(@RequestParam("artistName") String artistName) {
+        List<Song> songs = songService.findSongsByArtistName(artistName);
         return songMapper.toSearchSongDto(songs);
     }
 

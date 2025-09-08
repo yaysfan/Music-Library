@@ -1,19 +1,16 @@
-package com.yayfan.music.api.song;
+package com.yayfan.music.web.song;
 
+import com.yayfan.music.api.song.NewSongRequestDto;
+import com.yayfan.music.api.song.SongMapper;
 import com.yayfan.music.domain.artist.Artist;
 import com.yayfan.music.domain.artist.ArtistService;
-import com.yayfan.music.domain.song.Song;
 import com.yayfan.music.domain.song.SongService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,9 +21,9 @@ public class SongWebController {
     private final SongMapper songMapper;
 
     @GetMapping("/songs")
-    public String getSongPage(Model model) {
-        List<Song> songs = songService.searchSongs("");
-        model.addAttribute("songs", songs);
+    public String getSongPage(Model model, Authentication authentication) {
+        String name = authentication.getName();
+        model.addAttribute("songs", songService.findSongsByArtistName(name));
         return "songs";
     }
 

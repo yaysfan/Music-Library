@@ -13,4 +13,6 @@ public interface SongRepository extends JpaRepository<SongEntity, Integer> {
     List<SongEntity> search(String keyword);
 
     Optional<SongEntity> findByFile(String file);
+
+    List<SongEntity> findByArtistArtistName(String artistName);
 }

@@ -1,6 +1,5 @@
 package com.yayfan.music.domain.song;
 
-import com.yayfan.music.api.song.NewSongRequestDto;
 import com.yayfan.music.domain.artist.Artist;
 import com.yayfan.music.domain.file.FileAdapter;
 import com.yayfan.music.domain.file.FileAdapterException;
@@ -58,5 +57,10 @@ public class SongService {
     public List<Song> searchSongs(String search) {
         return songStorage.search(search);
     }
+
+    public List<Song> findSongsByArtistName(String artistName) {
+        return songStorage.findByArtistName(artistName);
+    }
+
 
 }

@@ -1,5 +1,7 @@
 package com.yayfan.music.domain.song;
 
+import com.yayfan.music.domain.artist.Artist;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,4 +11,6 @@ public interface SongStorage {
     Optional<Song> findById(Integer id);
 
     List<Song> search(String search);
+
+    List<Song> findByArtistName(String artistName);
 }
