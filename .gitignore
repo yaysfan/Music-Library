@@ -35,3 +35,6 @@ build/
 # JWT secrets
 src/main/resources/app.key
 src/main/resources/app.pub
+
+# OAuth secrets
+application-oauth.yml

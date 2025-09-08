@@ -1,4 +1,6 @@
   spring:
+    profiles:
+      include: oauth
     datasource:
       url: jdbc:postgresql://localhost:5432/music
       username: yaysfan
