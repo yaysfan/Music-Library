@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "artists")
 public class ArtistEntity extends AbstractEntity {
-    @Column(nullable = false)
+    @Column(unique = true)
     private String artistName;
 
     @OneToOne(cascade = CascadeType.ALL)
