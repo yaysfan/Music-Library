@@ -34,4 +34,12 @@ public class SongStore implements SongStorage {
                 .toList();
     }
 
+    @Override
+    public List<Song> findByArtistId(Integer artistId) {
+        List<SongEntity> songEntities = songRepository.findByArtistId(artistId);
+        return songEntities.stream()
+                .map(songEntityMapper::toDomainWithArtist)
+                .toList();
+    }
+
 }

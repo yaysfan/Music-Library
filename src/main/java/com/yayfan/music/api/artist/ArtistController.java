@@ -1,6 +1,9 @@
 package com.yayfan.music.api.artist;
 
+import com.yayfan.music.api.song.SearchedSongDto;
+import com.yayfan.music.api.song.SongMapper;
 import com.yayfan.music.domain.artist.ArtistService;
+import com.yayfan.music.domain.song.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +17,8 @@ import java.util.List;
 public class ArtistController {
     private final ArtistMapper mapper;
     private final ArtistService service;
+    private final SongMapper songMapper;
+    private final SongService songService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -25,5 +30,10 @@ public class ArtistController {
     @DeleteMapping("{artistId}")
     public void deleteArtist(@PathVariable("artistId") Integer id) {
         service.deleteArtist(id);
+    }
+
+    @GetMapping("{artistId}/songs")
+    public List<SearchedSongDto> findSongsByArtistId(@PathVariable("artistId") Integer artistId) {
+        return songMapper.toSearchSongDto(songService.findSongsByArtistId(artistId));
     }
 }

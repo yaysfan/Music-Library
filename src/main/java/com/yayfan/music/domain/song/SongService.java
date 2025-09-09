@@ -58,4 +58,8 @@ public class SongService {
         return songStorage.search(search);
     }
 
+    public List<Song> findSongsByArtistId(Integer artistId) {
+        return songStorage.findByArtistId(artistId);
+    }
+
 }
