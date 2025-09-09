@@ -9,4 +9,5 @@ import java.util.List;
 public interface ArtistMapper {
     SearchedArtistDto toSearchedArtistDto(Artist artist);
     List<SearchedArtistDto> toSearchedArtistDto(List<Artist> artists);
+    ArtistDto toArtistDto(Artist artist);
 }

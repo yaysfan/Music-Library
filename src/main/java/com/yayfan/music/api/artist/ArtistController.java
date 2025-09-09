@@ -7,6 +7,7 @@ import com.yayfan.music.domain.song.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,5 +36,13 @@ public class ArtistController {
     @GetMapping("{artistId}/songs")
     public List<SearchedSongDto> findSongsByArtistId(@PathVariable("artistId") Integer artistId) {
         return songMapper.toSearchSongDto(songService.findSongsByArtistId(artistId));
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasAuthority('ARTIST')")
+    public ArtistDto getMyArtistProfile(Authentication authentication) {
+        String username = authentication.getName();
+        var artist = service.findByUsername(username);
+        return mapper.toArtistDto(artist);
     }
 }
