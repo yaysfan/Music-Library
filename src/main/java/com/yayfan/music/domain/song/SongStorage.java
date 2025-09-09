@@ -12,5 +12,4 @@ public interface SongStorage {
 
     List<Song> search(String search);
 
-    List<Song> findByArtistName(String artistName);
 }

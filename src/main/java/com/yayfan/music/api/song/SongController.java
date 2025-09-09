@@ -58,12 +58,6 @@ public class SongController {
         return songMapper.toSearchSongDto(songs);
     }
 
-    @GetMapping("/by-artist")
-    public List<SearchedSongDto> searchSongsByArtistName(@RequestParam("artistName") String artistName) {
-        List<Song> songs = songService.findSongsByArtistName(artistName);
-        return songMapper.toSearchSongDto(songs);
-    }
-
     @GetMapping("/play/{songId}")
     public ResponseEntity<Resource> playSong(@PathVariable("songId") Integer id) {
         Song song = songService.findById(id);

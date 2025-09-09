@@ -58,9 +58,4 @@ public class SongService {
         return songStorage.search(search);
     }
 
-    public List<Song> findSongsByArtistName(String artistName) {
-        return songStorage.findByArtistName(artistName);
-    }
-
-
 }
