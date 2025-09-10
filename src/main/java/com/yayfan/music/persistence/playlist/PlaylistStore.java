@@ -1,0 +1,63 @@
+package com.yayfan.music.persistence.playlist;
+
+import com.yayfan.music.domain.playlist.Playlist;
+import com.yayfan.music.domain.playlist.PlaylistStorage;
+import com.yayfan.music.persistence.song.SongRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
+
+@Component
+@RequiredArgsConstructor
+public class PlaylistStore implements PlaylistStorage {
+
+    private final PlaylistRepository playlistRepository;
+    private final PlaylistSongRepository playlistSongRepository;
+    private final SongRepository songRepository;
+    private final PlaylistEntityMapper playlistEntityMapper;
+
+    @Override
+    public List<Playlist> findByUserId(Integer userId) {
+        return playlistRepository.findByUserId(userId).stream()
+                .map(playlistEntityMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public Optional<Playlist> findById(Integer playlistId) {
+        return playlistRepository.findById(playlistId)
+                .map(playlistEntityMapper::toDomainWithSongs);
+    }
+
+    @Override
+    public Playlist save(Playlist playlist) {
+        var entity = playlistEntityMapper.toEntity(playlist);
+        var savedEntity = playlistRepository.save(entity);
+        return playlistEntityMapper.toDomain(savedEntity);
+    }
+
+    @Override
+    public void addSongToPlaylist(Integer playlistId, Integer songId) {
+        playlistRepository.findById(playlistId).ifPresent(playlist -> {
+            songRepository.findById(songId).ifPresent(song -> {
+                PlaylistSongEntity playlistSong = new PlaylistSongEntity();
+                playlistSong.setPlaylist(playlist);
+                playlistSong.setSong(song);
+                playlistSongRepository.save(playlistSong);
+            });
+        });
+    }
+
+    @Override
+    public void removeSongFromPlaylist(Integer playlistId, Integer songId) {
+        playlistSongRepository.findByPlaylistIdAndSongId(playlistId, songId)
+                .ifPresent(playlistSongRepository::delete);
+    }
+
+    @Override
+    public void delete(Integer playlistId) {
+        playlistRepository.deleteById(playlistId);
+    }
+}
