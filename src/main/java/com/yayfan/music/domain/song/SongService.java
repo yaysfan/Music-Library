@@ -5,15 +5,20 @@ import com.yayfan.music.domain.file.FileAdapter;
 import com.yayfan.music.domain.file.FileAdapterException;
 import com.yayfan.music.domain.file.InvalidFileTypeException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRange;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Component
+@Service
 @RequiredArgsConstructor
 @Transactional(readOnly=true)
 public class SongService {
@@ -61,5 +66,36 @@ public class SongService {
     public List<Song> findSongsByArtistId(Integer artistId) {
         return songStorage.findByArtistId(artistId);
     }
+
+    public StreamingResponse prepareStreaming(Integer songId, String rangeHeader) throws IOException {
+        Song song = findById(songId);
+
+        Resource resource = fileAdapter.loadAsResource(song.getFile());
+        long fileLength = resource.contentLength();
+
+        List<HttpRange> ranges = HttpRange.parseRanges(rangeHeader);
+        HttpHeaders headers = new HttpHeaders();
+
+        if (ranges.isEmpty()) {
+            headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
+            headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(fileLength));
+            return new StreamingResponse(resource, HttpStatus.OK, headers);
+        } else {
+            HttpRange range = ranges.get(0);
+            long start = range.getRangeStart(fileLength);
+            long end = range.getRangeEnd(fileLength);
+            long contentLength = (end - start) + 1;
+
+            String contentRange = "bytes " + start + "-" + end + "/" + fileLength;
+            headers.add(HttpHeaders.CONTENT_RANGE, contentRange);
+            headers.add(HttpHeaders.ACCEPT_RANGES, "bytes");
+            headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(contentLength));
+            headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
+
+            return new StreamingResponse(resource, HttpStatus.PARTIAL_CONTENT, headers);
+        }
+    }
+
+
 
 }

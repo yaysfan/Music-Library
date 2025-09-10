@@ -5,9 +5,12 @@ import com.yayfan.music.domain.file.FileAdapterException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -69,6 +72,21 @@ public class FileStore implements FileAdapter {
             Files.delete(path);
         } catch (IOException e) {
             log.error("Could not delete file " + fileName, e);
+        }
+    }
+
+    @Override
+    public Resource loadAsResource(String fileName) throws FileAdapterException {
+        try {
+            Path path = Paths.get(basePath, fileName);
+            Resource resource = new UrlResource(path.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new FileAdapterException("Could not read file: " + fileName, null);
+            }
+        } catch (MalformedURLException e) {
+            throw new FileAdapterException("Could not read file: " + fileName, e);
         }
     }
 }

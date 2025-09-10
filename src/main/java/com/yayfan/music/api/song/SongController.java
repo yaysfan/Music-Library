@@ -5,6 +5,7 @@ import com.yayfan.music.domain.artist.Artist;
 import com.yayfan.music.domain.artist.ArtistService;
 import com.yayfan.music.domain.song.Song;
 import com.yayfan.music.domain.song.SongService;
+import com.yayfan.music.domain.song.StreamingResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
@@ -17,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -59,12 +61,12 @@ public class SongController {
     }
 
     @GetMapping("/play/{songId}")
-    public ResponseEntity<Resource> playSong(@PathVariable("songId") Integer id) {
-        Song song = songService.findById(id);
-        Resource resource = new InputStreamResource(songService.loadSong(song.getFile()));
+    public ResponseEntity<Resource> playSong(
+            @PathVariable("songId") Integer id,
+            @RequestHeader(value = HttpHeaders.RANGE, required = false) String rangeHeader) throws IOException {
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("audio/mpeg"))
-                .body(resource);
+        StreamingResponse response = songService.prepareStreaming(id, rangeHeader);
+
+        return new ResponseEntity<>(response.resource(), response.headers(), response.status());
     }
 }

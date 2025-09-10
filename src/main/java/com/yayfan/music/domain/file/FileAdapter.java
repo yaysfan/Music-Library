@@ -1,6 +1,7 @@
 package com.yayfan.music.domain.file;
 
 import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.Resource;
 
 import java.io.InputStream;
 import java.util.List;
@@ -16,4 +17,6 @@ public interface FileAdapter {
     InputStream load(String fileName) throws FileAdapterException;
 
     void delete(String fileName);
+
+    Resource loadAsResource(String fileName) throws FileAdapterException;
 }
