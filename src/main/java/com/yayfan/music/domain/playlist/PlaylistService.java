@@ -63,4 +63,10 @@ public class PlaylistService {
             throw new AccessDeniedException("You are not the owner of this playlist");
         }
     }
+
+    public Playlist getPlaylistById(Integer playlistId, String username) {
+        verifyPlaylistOwner(playlistId, username);
+        return playlistStorage.findById(playlistId)
+                .orElseThrow(PlaylistNotFoundException::new);
+    }
 }

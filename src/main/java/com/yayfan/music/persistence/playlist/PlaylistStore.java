@@ -3,6 +3,7 @@ package com.yayfan.music.persistence.playlist;
 import com.yayfan.music.domain.playlist.Playlist;
 import com.yayfan.music.domain.playlist.PlaylistStorage;
 import com.yayfan.music.persistence.song.SongRepository;
+import com.yayfan.music.persistence.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,11 +18,12 @@ public class PlaylistStore implements PlaylistStorage {
     private final PlaylistSongRepository playlistSongRepository;
     private final SongRepository songRepository;
     private final PlaylistEntityMapper playlistEntityMapper;
+    private final UserRepository userRepository;
 
     @Override
     public List<Playlist> findByUserId(Integer userId) {
         return playlistRepository.findByUserId(userId).stream()
-                .map(playlistEntityMapper::toDomain)
+                .map(playlistEntityMapper::toDomainWithSongs)
                 .toList();
     }
 
@@ -34,8 +36,10 @@ public class PlaylistStore implements PlaylistStorage {
     @Override
     public Playlist save(Playlist playlist) {
         var entity = playlistEntityMapper.toEntity(playlist);
+        userRepository.findByUsername(playlist.getUser().getUsername())
+                .ifPresent(entity::setUser);
         var savedEntity = playlistRepository.save(entity);
-        return playlistEntityMapper.toDomain(savedEntity);
+        return playlistEntityMapper.toDomainWithSongs(savedEntity);
     }
 
     @Override
