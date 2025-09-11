@@ -4,12 +4,16 @@ import com.yayfan.music.domain.artist.Artist;
 import com.yayfan.music.domain.file.FileAdapter;
 import com.yayfan.music.domain.file.FileAdapterException;
 import com.yayfan.music.domain.file.InvalidFileTypeException;
+import com.yayfan.music.domain.playlist.PlaylistStorage;
+import com.yayfan.music.persistence.playlist.PlaylistStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -24,6 +28,7 @@ import java.util.UUID;
 public class SongService {
     private final SongStorage songStorage;
     private final FileAdapter fileAdapter;
+    private final PlaylistStorage playlistStorage;
     public static final String AUDIO_MPEG = "audio/mpeg";
 
     @Transactional
@@ -57,6 +62,22 @@ public class SongService {
     @Transactional
     public void deleteSong(Song song) {
         fileAdapter.delete(song.getFile());
+        songStorage.deleteById(song.getId());
+    }
+
+
+    @Transactional
+    public void deleteSongById(Integer songId, String username) {
+        Song song = songStorage.findById(songId)
+                .orElseThrow(SongNotFoundException::new);
+
+        if (!song.getArtist().getUser().getUsername().equals(username)) {
+            throw new AccessDeniedException("You are not the owner of this song");
+        }
+
+        fileAdapter.delete(song.getFile()); //개선 고민 필요
+
+        songStorage.deleteById(songId);
     }
 
     public List<Song> searchSongs(String search) {

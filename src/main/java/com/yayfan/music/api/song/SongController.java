@@ -69,4 +69,14 @@ public class SongController {
 
         return new ResponseEntity<>(response.resource(), response.headers(), response.status());
     }
+
+    @DeleteMapping("/{songId}")
+    @PreAuthorize("hasAuthority('ARTIST')") // ARTIST 권한이 있는 사용자만 호출 가능
+    @ResponseStatus(HttpStatus.NO_CONTENT) // 성공 시 204 No Content 응답
+    public void deleteSong(
+            @PathVariable("songId") Integer songId,
+            Authentication authentication
+    ) {
+        songService.deleteSongById(songId, authentication.getName());
+    }
 }

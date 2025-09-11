@@ -2,8 +2,12 @@ package com.yayfan.music.persistence.song;
 
 import com.yayfan.music.persistence.AbstractEntity;
 import com.yayfan.music.persistence.artist.ArtistEntity;
+import com.yayfan.music.persistence.playlist.PlaylistSongEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ToString
 @Getter
@@ -28,4 +32,8 @@ public class SongEntity extends AbstractEntity {
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
     @JoinColumn(name = "artist_id")
     private ArtistEntity artist;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "song", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PlaylistSongEntity> playlistSongs = new ArrayList<>();
 }

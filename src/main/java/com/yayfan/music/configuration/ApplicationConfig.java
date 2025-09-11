@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
+
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
@@ -58,9 +60,9 @@ public class ApplicationConfig {
                         "admin",
                         passwordEncoder().encode("password"),
                         Role.ADMIN,
-                        null
+                        null,
+                        new ArrayList<>()
                 )
         );
-
     }
 }

@@ -23,7 +23,7 @@ public class SongStore implements SongStorage {
     @Override
     public Optional<Song> findById(Integer id) {
         Optional<SongEntity> songEntity = songRepository.findById(id);
-        return songEntity.map(songEntityMapper::toDomain);
+        return songEntity.map(songEntityMapper::toDomainWithArtist);
     }
 
     @Override
@@ -40,6 +40,11 @@ public class SongStore implements SongStorage {
         return songEntities.stream()
                 .map(songEntityMapper::toDomainWithArtist)
                 .toList();
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        songRepository.deleteById(id);
     }
 
 }
