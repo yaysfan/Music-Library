@@ -7,6 +7,8 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface SongEntityMapper {
+
+    @Mapping(target = "playlistSongs", ignore = true)
     SongEntity toEntity(Song song);
 
     @Mapping(target = "artist", ignore = true)

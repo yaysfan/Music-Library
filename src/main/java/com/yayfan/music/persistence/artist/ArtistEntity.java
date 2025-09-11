@@ -6,13 +6,13 @@ import com.yayfan.music.persistence.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ToString
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "artists")
 public class ArtistEntity extends AbstractEntity {
@@ -25,5 +25,5 @@ public class ArtistEntity extends AbstractEntity {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "artist", cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
-    private List<SongEntity> songs;
+    private List<SongEntity> songs = new ArrayList<>();
 }

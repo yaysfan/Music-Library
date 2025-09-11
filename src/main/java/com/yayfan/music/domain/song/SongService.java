@@ -5,7 +5,6 @@ import com.yayfan.music.domain.file.FileAdapter;
 import com.yayfan.music.domain.file.FileAdapterException;
 import com.yayfan.music.domain.file.InvalidFileTypeException;
 import com.yayfan.music.domain.playlist.PlaylistStorage;
-import com.yayfan.music.persistence.playlist.PlaylistStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpRange;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;

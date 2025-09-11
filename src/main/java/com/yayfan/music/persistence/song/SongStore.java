@@ -2,6 +2,7 @@ package com.yayfan.music.persistence.song;
 
 import com.yayfan.music.domain.song.Song;
 import com.yayfan.music.domain.song.SongStorage;
+import com.yayfan.music.persistence.artist.ArtistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +13,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SongStore implements SongStorage {
     private final SongRepository songRepository;
+    private final ArtistRepository artistRepository;
     private final SongEntityMapper songEntityMapper;
 
     @Override
     public Song save(Song song) {
         SongEntity songEntity = songEntityMapper.toEntity(song);
+
+        artistRepository.findById(song.getArtist().getId())
+                .ifPresent(songEntity::setArtist);
+
         return songEntityMapper.toDomain(songRepository.save(songEntity));
     }
 

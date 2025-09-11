@@ -13,7 +13,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "songs")
@@ -29,7 +28,7 @@ public class SongEntity extends AbstractEntity {
 
 
     @ToString.Exclude
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
+    @ManyToOne
     @JoinColumn(name = "artist_id")
     private ArtistEntity artist;
 
