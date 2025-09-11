@@ -1,7 +1,5 @@
 package com.yayfan.music.api.song;
 
-import com.yayfan.music.api.song.NewSongRequestDto;
-import com.yayfan.music.api.song.SearchedSongDto;
 import com.yayfan.music.domain.song.NewSongRequest;
 import com.yayfan.music.domain.song.Song;
 import org.mapstruct.Mapper;

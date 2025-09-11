@@ -17,6 +17,6 @@ public class SignUpRequestDto {
     String password;
 
     @NotNull(message = "Artist name is required")
-    @Size(min = 4, max = 30, message = "Artist name must be between 4 and 30 characters")
+    @Size(min = 2, max = 30, message = "Artist name must be between 4 and 30 characters")
     String artistName;
 }

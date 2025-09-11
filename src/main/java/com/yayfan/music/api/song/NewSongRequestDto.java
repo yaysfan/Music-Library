@@ -8,11 +8,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Value
 public class NewSongRequestDto {
     @NotNull(message = "Song name is required")
-    @Size(min = 4, max = 30, message = "Song name must be between 4 and 30 characters")
+    @Size(min = 1, max = 50, message = "Song name must be between 4 and 30 characters")
     String name;
 
     @NotNull(message = "Genre is required")
-    @Size(min = 4, max = 30, message = "Artist name must be between 4 and 30 characters")
+    @Size(min = 1, max = 50, message = "Artist name must be between 4 and 30 characters")
     String genre;
 
     @NotNull(message = "Song file is required")
