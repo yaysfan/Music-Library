@@ -26,7 +26,6 @@ import java.util.UUID;
 public class SongService {
     private final SongStorage songStorage;
     private final FileAdapter fileAdapter;
-    private final PlaylistStorage playlistStorage;
     public static final String AUDIO_MPEG = "audio/mpeg";
 
     @Transactional

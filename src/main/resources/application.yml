@@ -41,3 +41,7 @@
     jobs:
       clear-songs:
         cron: "*/15 * * * *" # every 15 minutes, see https://crontab.guru
+  data:
+    redis:
+      host: localhost
+      port: 6379
