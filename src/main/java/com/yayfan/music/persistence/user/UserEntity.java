@@ -28,6 +28,7 @@ public class UserEntity extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @ToString.Exclude
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ArtistEntity artist;
 
