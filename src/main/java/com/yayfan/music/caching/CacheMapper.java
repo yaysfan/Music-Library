@@ -8,6 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface CacheMapper {
 
@@ -22,5 +24,9 @@ public interface CacheMapper {
     Artist artistCacheDtoToArtist(ArtistCacheDto artistCacheDto);
 
     Song songCacheDtoToSong(SongCacheDto songCacheDto);
+
+    List<SongCacheDto> songsToSongCacheDtos(List<Song> songs);
+
+    List<Song> songCacheDtosToSongs(List<SongCacheDto> songCacheDtos);
 }
 
