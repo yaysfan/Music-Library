@@ -44,6 +44,7 @@ public class ArtistControllerTest {
                 "bob_user",
                 "1234",
                 Role.ARTIST,
+                null,
                 null
         );
         artistRepository.save(

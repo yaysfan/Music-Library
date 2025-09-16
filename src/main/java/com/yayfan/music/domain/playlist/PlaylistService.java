@@ -55,18 +55,17 @@ public class PlaylistService {
         playlistStorage.delete(playlistId);
     }
 
-    private void verifyPlaylistOwner(Integer playlistId, String username) {
-        Playlist playlist = playlistStorage.findById(playlistId)
+    private Playlist verifyPlaylistOwner(Integer playlistId, String username) {
+        Playlist playlist = playlistStorage.findByIdWithSongs(playlistId)
                 .orElseThrow(PlaylistNotFoundException::new);
 
         if (!playlist.getUser().getUsername().equals(username)) {
             throw new AccessDeniedException("You are not the owner of this playlist");
         }
+        return playlist;
     }
 
     public Playlist getPlaylistById(Integer playlistId, String username) {
-        verifyPlaylistOwner(playlistId, username);
-        return playlistStorage.findById(playlistId)
-                .orElseThrow(PlaylistNotFoundException::new);
+        return verifyPlaylistOwner(playlistId, username);
     }
 }

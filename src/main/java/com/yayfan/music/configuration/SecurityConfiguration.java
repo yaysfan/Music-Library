@@ -50,20 +50,18 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                HttpMethod.GET, "/api/v1/songs/**",
-                                                "/songs/**"
-                        )
-                        .permitAll()
-                        .requestMatchers(
-                                "/api/v1/artists/**",
                                 "/api/v1/auth/**",
                                 "/swagger-ui/**",
                                 "/api-docs/**"
-                        )
-                        .permitAll()
+                        ).permitAll()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/v1/songs/**",
+                                "/api/v1/artists/**",
+                                "/songs/**" // 음원 스트리밍/다운로드 경로
+                        ).permitAll()
                         .anyRequest()
                         .authenticated())
-                .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(config -> config.jwt(Customizer.withDefaults()))
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptions -> exceptions

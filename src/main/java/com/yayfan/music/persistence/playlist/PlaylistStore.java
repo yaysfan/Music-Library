@@ -72,4 +72,10 @@ public class PlaylistStore implements PlaylistStorage {
         playlistRepository.deleteById(playlistId);
     }
 
+    @Override
+    public Optional<Playlist> findByIdWithSongs(Integer playlistId) {
+        return playlistRepository.findByIdWithSongs(playlistId)
+                .map(playlistEntityMapper::toDomainWithSongs);
+    }
+
 }

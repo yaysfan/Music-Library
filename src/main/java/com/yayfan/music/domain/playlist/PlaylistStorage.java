@@ -21,4 +21,7 @@ public interface PlaylistStorage {
 
     // 플레이리스트를 삭제
     void delete(Integer playlistId);
+
+    // ID로 특정 플레이리스트를 노래 목록과 함께 "Fetch Join"으로 가져오기
+    Optional<Playlist> findByIdWithSongs(Integer playlistId);
 }
