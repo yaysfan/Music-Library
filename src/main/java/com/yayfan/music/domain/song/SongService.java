@@ -1,11 +1,15 @@
 package com.yayfan.music.domain.song;
 
+import com.yayfan.music.caching.CacheMapper;
+import com.yayfan.music.caching.song.SongCacheDto;
 import com.yayfan.music.domain.artist.Artist;
 import com.yayfan.music.domain.file.FileAdapter;
 import com.yayfan.music.domain.file.FileAdapterException;
 import com.yayfan.music.domain.file.InvalidFileTypeException;
-import com.yayfan.music.domain.playlist.PlaylistStorage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
@@ -27,6 +31,7 @@ public class SongService {
     private final SongStorage songStorage;
     private final FileAdapter fileAdapter;
     public static final String AUDIO_MPEG = "audio/mpeg";
+    private final CacheManager cacheManager;
 
     @Transactional
     public Song createSong(NewSongRequest request, Artist artist)
@@ -48,8 +53,21 @@ public class SongService {
     }
 
     public Song findById(Integer id) throws SongNotFoundException {
-        return songStorage.findById(id)
-                .orElseThrow(SongNotFoundException::new);
+        Cache cache = cacheManager.getCache("songs");
+        if (cache == null) {
+            return findFromStorage(id);
+        }
+
+        SongCacheDto cachedDto = cache.get(id, SongCacheDto.class);
+        if (cachedDto != null) {
+            return CacheMapper.INSTANCE.songCacheDtoToSong(cachedDto);
+        }
+
+        Song song = findFromStorage(id);
+
+        cache.put(id, CacheMapper.INSTANCE.songToSongCacheDto(song));
+
+        return song;
     }
 
     public InputStream loadSong(String fileName) throws FileAdapterException {
@@ -72,9 +90,13 @@ public class SongService {
             throw new AccessDeniedException("You are not the owner of this song");
         }
 
-        fileAdapter.delete(song.getFile()); //개선 고민 필요
-
+        fileAdapter.delete(song.getFile());
         songStorage.deleteById(songId);
+
+        Cache cache = cacheManager.getCache("songs");
+        if (cache != null) {
+            cache.evict(songId);
+        }
     }
 
     public List<Song> searchSongs(String search) {
@@ -114,6 +136,9 @@ public class SongService {
         }
     }
 
-
+    private Song findFromStorage(Integer id) {
+        return songStorage.findById(id)
+                .orElseThrow(SongNotFoundException::new);
+    }
 
 }

@@ -31,6 +31,11 @@
 	</properties>
 	<dependencies>
 
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-parameter-names</artifactId>
+		</dependency>
+
         <!-- Redis 추가		-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
