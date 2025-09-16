@@ -9,7 +9,7 @@ import com.yayfan.music.domain.song.StreamingResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -61,13 +61,15 @@ public class SongController {
     }
 
     @GetMapping("/play/{songId}")
-    public ResponseEntity<Resource> playSong(
+    public ResponseEntity<ResourceRegion> playSong(
             @PathVariable("songId") Integer id,
             @RequestHeader(value = HttpHeaders.RANGE, required = false) String rangeHeader) throws IOException {
 
         StreamingResponse response = songService.prepareStreaming(id, rangeHeader);
-
-        return new ResponseEntity<>(response.resource(), response.headers(), response.status());
+        return ResponseEntity
+                .status(response.status())
+                .contentType(MediaType.valueOf("audio/mpeg"))
+                .body(response.region());
     }
 
     @DeleteMapping("/{songId}")

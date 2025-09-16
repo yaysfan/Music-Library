@@ -1,11 +1,11 @@
 package com.yayfan.music.domain.song;
 
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 public record StreamingResponse(
-        Resource resource,
+        ResourceRegion region,
         HttpStatus status,
         HttpHeaders headers
 ) {

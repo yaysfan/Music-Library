@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
 import org.springframework.http.HttpStatus;
@@ -141,30 +142,22 @@ public class SongService {
 
     public StreamingResponse prepareStreaming(Integer songId, String rangeHeader) throws IOException {
         Song song = findById(songId);
-
         Resource resource = fileAdapter.loadAsResource(song.getFile());
         long fileLength = resource.contentLength();
 
         List<HttpRange> ranges = HttpRange.parseRanges(rangeHeader);
-        HttpHeaders headers = new HttpHeaders();
 
         if (ranges.isEmpty()) {
-            headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
-            headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(fileLength));
-            return new StreamingResponse(resource, HttpStatus.OK, headers);
+            // 전체 파일을 요청한 경우
+            ResourceRegion region = new ResourceRegion(resource, 0, fileLength);
+            return new StreamingResponse(region, HttpStatus.OK, new HttpHeaders()); // 헤더는 비워둡니다.
         } else {
+            // 특정 부분을 요청한 경우
             HttpRange range = ranges.get(0);
             long start = range.getRangeStart(fileLength);
-            long end = range.getRangeEnd(fileLength);
-            long contentLength = (end - start) + 1;
-
-            String contentRange = "bytes " + start + "-" + end + "/" + fileLength;
-            headers.add(HttpHeaders.CONTENT_RANGE, contentRange);
-            headers.add(HttpHeaders.ACCEPT_RANGES, "bytes");
-            headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(contentLength));
-            headers.add(HttpHeaders.CONTENT_TYPE, "audio/mpeg");
-
-            return new StreamingResponse(resource, HttpStatus.PARTIAL_CONTENT, headers);
+            long contentLength = range.getRangeEnd(fileLength) - start + 1;
+            ResourceRegion region = new ResourceRegion(resource, start, contentLength);
+            return new StreamingResponse(region, HttpStatus.PARTIAL_CONTENT, new HttpHeaders()); // 헤더는 비워둡니다.
         }
     }
 
