@@ -1,6 +1,7 @@
-version: '3.8'
+# docker-compose.yml
 
 services:
+
   redis:
     image: redis:7-alpine
     container_name: music-library-redis
@@ -8,6 +9,21 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+
+  controller:
+    image: ngrinder/controller
+    restart: always
+    ports:
+      - "9000:80"
+      - "16001:16001"
+      - "12000-12009:12000-12009"
+    volumes:
+      - ./ngrinder-controller:/opt/ngrinder-controller
+  agent:
+    image: ngrinder/agent
+    restart: always
+    links:
+      - controller
 
 volumes:
   redis-data:

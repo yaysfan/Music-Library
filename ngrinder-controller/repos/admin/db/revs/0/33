@@ -1,0 +1,43 @@
+PLAIN
+K 11
+targetHosts
+V 0
+
+K 9
+validated
+V 5
+false
+END
+ENDREP
+id: 0-17.0.r33/63
+type: file
+pred: 0-17.0.r32/509
+count: 16
+text: 32 0 424 2444 035d59b78a58f552ca26c72b7ab634c6 a210e8cdfee58628cfd4664c498c4f6bf37f4af6 32-w/_1
+props: 33 0 50 50 9451ec6176239ace09c05a5d0190e9e9
+cpath: /playlist.groovy
+copyroot: 0 /
+
+PLAIN
+K 14
+.gitconfig.yml
+V 17
+file 0-1.0.r1/346
+K 15
+playlist.groovy
+V 18
+file 0-17.0.r33/63
+END
+ENDREP
+id: 0.0.r33/420
+type: dir
+pred: 0.0.r32/870
+count: 33
+text: 33 315 92 92 c8a396f7a8bb1b5fa96a7f751b748022
+cpath: /
+copyroot: 0 /
+
+0-17.0.t32-w modify-file true true /playlist.groovy
+
+
+420 550
