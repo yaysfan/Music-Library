@@ -7,7 +7,7 @@
       password: 1234
       driver-class-name: org.postgresql.Driver
       hikari:
-        maximum-pool-size: 20
+        maximum-pool-size: 10
     servlet:
       multipart:
         max-file-size: 15MB
@@ -50,3 +50,11 @@
   logging:
     level:
       org.hibernate.SQL: debug
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: "*" # 모든 actuator 엔드포인트를 열기 (개발/테스트용)
+    endpoint:
+      health:
+        show-details: always

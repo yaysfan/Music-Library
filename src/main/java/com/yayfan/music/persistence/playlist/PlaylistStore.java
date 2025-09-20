@@ -4,11 +4,8 @@ import com.yayfan.music.domain.playlist.Playlist;
 import com.yayfan.music.domain.playlist.PlaylistStorage;
 import com.yayfan.music.persistence.song.SongRepository;
 import com.yayfan.music.persistence.user.UserRepository;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +19,6 @@ public class PlaylistStore implements PlaylistStorage {
     private final SongRepository songRepository;
     private final PlaylistEntityMapper playlistEntityMapper;
     private final UserRepository userRepository;
-    private final EntityManager entityManager;
 
 
     @Override

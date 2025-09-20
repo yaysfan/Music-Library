@@ -2,6 +2,21 @@
 
 services:
 
+  # --- PostgreSQL DB 서비스 추가 ---
+  db:
+    image: postgres:15-alpine  # PostgreSQL 15 버전 이미지 사용
+    container_name: music-library-db # 컨테이너 이름 설정
+    restart: always # 컨테이너가 꺼지면 자동으로 다시 시작
+    environment:
+      - POSTGRES_USER=yaysfan      # 유저 이름
+      - POSTGRES_PASSWORD=1234     # 비밀번호
+      - POSTGRES_DB=music          # DB 이름
+    ports:
+      - "5432:5432" # 내 PC의 5432 포트와 컨테이너의 5432 포트를 연결
+    volumes:
+      - postgres-data:/var/lib/postgresql/data # DB 데이터를 내 PC에 저장하여 컨테이너가 삭제돼도 유지
+
+
   redis:
     image: redis:7-alpine
     container_name: music-library-redis
@@ -26,4 +41,5 @@ services:
       - controller
 
 volumes:
+  postgres-data:
   redis-data:
