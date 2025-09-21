@@ -49,7 +49,7 @@
       port: 6379
   logging:
     level:
-      org.hibernate.SQL: debug
+      org.hibernate.SQL: info
   management:
     endpoints:
       web:
