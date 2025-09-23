@@ -1,5 +1,6 @@
 package com.yayfan.music.domain.playlist;
 
+import com.yayfan.music.domain.song.Song;
 import com.yayfan.music.domain.user.User;
 import com.yayfan.music.domain.user.UserStorage;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.convert.DataSizeUnit;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collections;
@@ -31,6 +32,7 @@ public class PlaylistServiceTest {
 
     private User testUser;
     private Playlist testPlaylist;
+    private Song testSong;
 
     @BeforeEach
     void setUp() {
@@ -47,6 +49,11 @@ public class PlaylistServiceTest {
                 .name("test")
                 .user(testUser)
                 .songs(Collections.emptyList())
+                .build();
+
+        testSong = Song.builder()
+                .id(1)
+                .name("testsong")
                 .build();
     }
 
@@ -85,15 +92,42 @@ public class PlaylistServiceTest {
     }
 
     @Test
-    @DisplayName("자신의 플레이리스트 삭제")
+    @DisplayName("자신의 플레이리스트 삭제 성공")
     void shouldDeleteMyPlaylist() {
         //given
         when(playlistStorage.findByIdWithSongs(1)).thenReturn(Optional.of(testPlaylist));
 
         //when
-        playlistService.deletePlaylist(1,"testuser");
+        playlistService.deletePlaylist(1, "testuser");
 
         //then
         verify(playlistStorage, times(1)).delete(1);
+    }
+
+    @Test
+    @DisplayName("자신의 플레이리스트 삭제 실패")
+    void shouldThrowException_whenUserIsDifferent() {
+        //given
+        when(playlistStorage.findByIdWithSongs(1)).thenReturn(Optional.of(testPlaylist));
+
+        //when + then
+        assertThrows(AccessDeniedException.class, () -> {
+            playlistService.deletePlaylist(1, "otheruser");
+        });
+
+        verify(playlistStorage, never()).delete(1);
+    }
+
+    @Test
+    @DisplayName("자신의 플레이리스트에 노래 추가 성공")
+    void ShouldAddSongMyPlaylist() {
+        //given
+        when(playlistStorage.findByIdWithSongs(1)).thenReturn(Optional.of(testPlaylist));
+
+        //when
+        playlistService.addSongToPlaylist(1,1, "testuser");
+
+        //then
+        verify(playlistStorage, times(1)).addSongToPlaylist(1,1);
     }
 }
