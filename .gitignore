@@ -38,3 +38,6 @@ src/main/resources/app.pub
 
 # nGrinder
 ngrinder-controller/
+
+# Uploaded song files
+/songs/
