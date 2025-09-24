@@ -120,14 +120,46 @@ public class PlaylistServiceTest {
 
     @Test
     @DisplayName("자신의 플레이리스트에 노래 추가 성공")
-    void ShouldAddSongMyPlaylist() {
+    void shouldAddSongMyPlaylist() {
         //given
         when(playlistStorage.findByIdWithSongs(1)).thenReturn(Optional.of(testPlaylist));
 
         //when
-        playlistService.addSongToPlaylist(1,1, "testuser");
+        playlistService.addSongToPlaylist(1, 1, "testuser");
 
         //then
-        verify(playlistStorage, times(1)).addSongToPlaylist(1,1);
+        verify(playlistStorage, times(1)).addSongToPlaylist(1, 1);
+    }
+
+    @Test
+    @DisplayName("자신의 플레이리스트 추가 성공")
+    void shouldAddMyPlaylist() {
+        //given
+        when(userStorage.findByUsername("testuser")).thenReturn(Optional.of(testUser));
+        when(playlistStorage.save(any(Playlist.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        //when
+        Playlist playlist = playlistService.createPlaylist("test", "testuser");
+
+        //then
+        assertEquals(testUser, playlist.getUser());
+        assertEquals("test", playlist.getName());
+
+        verify(userStorage, times(1)).findByUsername("testuser");
+        verify(playlistStorage, times(1)).save(any(Playlist.class));
+
+    }
+
+    @Test
+    @DisplayName("자신의 플레이리스트의 노래 삭제 성공")
+    void shouldDeleteSongMyPlaylist() {
+        //given
+        when(playlistStorage.findByIdWithSongs(1)).thenReturn(Optional.of(testPlaylist));
+
+        //when
+        playlistService.removeSongFromPlaylist(1, 1, "testuser");
+
+        //then
+        verify(playlistStorage, times(1)).removeSongFromPlaylist(1, 1);
     }
 }
