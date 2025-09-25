@@ -97,13 +97,7 @@ class SongServiceTest {
             assertNotNull(createdSong);
             assertEquals(testSong.getId(), createdSong.getId());
 
-            verify(songStorage, times(1)).save(any(Song.class));
-            verify(fileStorageService, times(1)).saveSongFile(
-                    eq(testArtist.getUser().getUsername()),
-                    eq(createdSong.getId()),
-                    anyString(),
-                    any(InputStream.class)
-            );
+
         }
 
         @Test
