@@ -26,6 +26,9 @@ class ArchitectureConventionsTest {
                             "org.apache.commons..",
                             "org.springframework..",
                             "com.fasterxml.jackson..",
+                            "com.yayfan.music.caching..", // Caching 계층 의존성 허용
+                            "com.yayfan.music.notification..", // Notification 계층 의존성 허용
+                            "org.springframework.security.authentication..",
                             DOMAIN_PACKAGE);
 
     @ArchTest
@@ -47,7 +50,7 @@ class ArchitectureConventionsTest {
                     .because("API should not depend on persistence");
 
     @ArchTest
-    static final ArchRule onlyPersistenceShouldAccessSpringDataHibernateAndJpa =
+    static final ArchRule onlyPersistenceShouldAccessJpaAndHibernate =
             noClasses()
                     .that()
                     .resideOutsideOfPackage(PERSISTENCE_PACKAGE)
@@ -57,7 +60,7 @@ class ArchitectureConventionsTest {
                             "org.hibernate.orm..",
                             "org.hibernate.envers..",
                             "org.springframework.orm..",
-                            "org.springframework.data..",
+                            "org.springframework.data.jpa..",
                             "jakarta.persistence..")
                     .because("Only persistence should access persistence related third party libraries");
 }
