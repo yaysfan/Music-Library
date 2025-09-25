@@ -47,5 +47,11 @@ jobs:
       - name: Grant execute permission for mvnw
         run: chmod +x ./mvnw
 
+      - name: Create RSA key files
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APP_KEY }}" > src/main/resources/app.key
+          echo "${{ secrets.APP_PUB }}" > src/main/resources/app.pub
+
       - name: Build with Maven
         run: ./mvnw test
