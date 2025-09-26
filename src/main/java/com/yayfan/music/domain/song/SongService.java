@@ -176,6 +176,13 @@ public class SongService {
                 .artist(artist)
                 .build();
 
-        return songStorage.save(song);
+        Song savedSong = songStorage.save(song);
+
+        Cache cache = cacheManager.getCache("artistSongs");
+        if (cache != null) {
+            cache.evict(artist.getId());
+        }
+
+        return savedSong;
     }
 }
