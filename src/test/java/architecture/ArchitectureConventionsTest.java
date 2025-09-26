@@ -27,7 +27,7 @@ class ArchitectureConventionsTest {
                             "org.springframework..",
                             "com.fasterxml.jackson..",
                             "com.yayfan.music.caching..", // Caching 계층 의존성 허용
-                            "com.yayfan.music.notification..", // Notification 계층 의존성 허용
+                            "com.yayfan.music.integration.notification..", // Notification 계층 의존성 허용
                             "org.springframework.security.authentication..",
                             DOMAIN_PACKAGE);
 
