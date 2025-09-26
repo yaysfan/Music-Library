@@ -166,4 +166,16 @@ public class SongService {
                 .orElseThrow(SongNotFoundException::new);
     }
 
+    @Transactional
+    public Song saveConvertedSong(String name, String genre, String fileName, Artist artist) {
+
+        Song song = Song.builder()
+                .name(name)
+                .genre(genre)
+                .file(fileName)
+                .artist(artist)
+                .build();
+
+        return songStorage.save(song);
+    }
 }

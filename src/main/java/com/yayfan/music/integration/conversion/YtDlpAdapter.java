@@ -38,8 +38,10 @@ public class YtDlpAdapter {
             // youtubeUrl : 변환할 유튜브 주소
             ProcessBuilder processBuilder = new ProcessBuilder(
                     ytDlpPath,
+                    "-4",
                     "--ffmpeg-location", ffmpegDirectory,
                     "--no-playlist",
+                    "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
                     "-x",
                     "--audio-format", "mp3",
                     "-o", outputPath.toString(),

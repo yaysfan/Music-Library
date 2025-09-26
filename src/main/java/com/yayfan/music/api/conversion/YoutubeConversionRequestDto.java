@@ -13,8 +13,14 @@ public class YoutubeConversionRequestDto {
     @URL(message = "올바른 URL 형식이 아닙니다.")
     String youtubeUrl;
 
-    @JsonCreator
-    public YoutubeConversionRequestDto(@JsonProperty("youtubeUrl") String youtubeUrl) {
-        this.youtubeUrl = youtubeUrl;
-    }
+    @NotBlank
+    String name;
+
+    @NotBlank
+    String genre;
+
+//    @JsonCreator
+//    public YoutubeConversionRequestDto(@JsonProperty("youtubeUrl") String youtubeUrl) {
+//        this.youtubeUrl = youtubeUrl;
+//    }
 }

@@ -19,7 +19,7 @@ public class YoutubeConversionController {
         String username = authentication.getName();
         String youtubeUrl = requestDto.getYoutubeUrl();
 
-        youtubeConversionService.convertYoutubeUrlToMp3(youtubeUrl, username);
+        youtubeConversionService.convertYoutubeUrlToMp3(youtubeUrl, requestDto, username);
 
     }
 
