@@ -17,9 +17,12 @@ public class YoutubeConversionController {
     @PostMapping
     public void conversion(@Valid @RequestBody YoutubeConversionRequestDto requestDto, Authentication authentication) {
         String username = authentication.getName();
-        String youtubeUrl = requestDto.getYoutubeUrl();
-
-        youtubeConversionService.convertYoutubeUrlToMp3(youtubeUrl, requestDto, username);
+        youtubeConversionService.convertYoutubeUrlToMp3(
+                requestDto.getYoutubeUrl(),
+                requestDto.getName(),
+                requestDto.getGenre(),
+                username
+        );
 
     }
 

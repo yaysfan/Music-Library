@@ -30,6 +30,7 @@ class ArchitectureConventionsTest {
                             "com.yayfan.music.integration.notification..", // Notification 계층 의존성 허용
                             "com.yayfan.music.integration.conversion..",
                             "org.springframework.security.authentication..",
+
                             DOMAIN_PACKAGE);
 
     @ArchTest

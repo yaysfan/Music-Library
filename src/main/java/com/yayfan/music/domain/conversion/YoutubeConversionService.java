@@ -21,7 +21,8 @@ public class YoutubeConversionService {
     private final ArtistService artistService;
     private final SongService songService;
 
-    public void convertYoutubeUrlToMp3(String youtubeUrl, YoutubeConversionRequestDto requestDto, String username) {
+    public void convertYoutubeUrlToMp3(String youtubeUrl, String name, String genre, String username) {
+
 
         CompletableFuture<File> conversionPromise = ytDlpAdapter.convert(youtubeUrl);
 
@@ -34,7 +35,7 @@ public class YoutubeConversionService {
                 sseNotificationAdapter.sendNotification(username, "upload-success", successMessage);
 
                 Artist artist = artistService.findByUsername(username);
-                songService.saveConvertedSong(requestDto.getName(), requestDto.getGenre(), file.getName() ,artist);
+                songService.saveConvertedSong(name, genre, file.getName(), artist);
             }
         });
 
