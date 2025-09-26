@@ -1,5 +1,6 @@
-package com.yayfan.music.notification;
+package com.yayfan.music.api.notification;
 
+import com.yayfan.music.integration.notification.SseNotificationAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -13,11 +14,11 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequiredArgsConstructor
 public class NotificationController {
 
-    private final NotificationService notificationService;
+    private final SseNotificationAdapter sseNotificationAdapter;
 
     @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribe(Authentication authentication) {
         String username = authentication.getName(); // userId -> username
-        return notificationService.subscribe(username); // userId -> username
+        return sseNotificationAdapter.subscribe(username); // userId -> username
     }
 }

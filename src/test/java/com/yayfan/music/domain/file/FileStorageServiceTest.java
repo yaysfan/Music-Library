@@ -1,7 +1,7 @@
 package com.yayfan.music.domain.file;
 
 import com.yayfan.music.domain.song.SongStorage;
-import com.yayfan.music.notification.NotificationService;
+import com.yayfan.music.integration.notification.SseNotificationAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,7 +23,7 @@ public class FileStorageServiceTest {
     private FileAdapter fileAdapter;
 
     @Mock
-    private NotificationService notificationService;
+    private SseNotificationAdapter sseNotificationAdapter;
 
     @Mock
     private SongStorage songStorage;
@@ -52,6 +52,6 @@ public class FileStorageServiceTest {
 
         //then
         verify(songStorage).deleteById(eq(songId));
-        verify(notificationService).sendNotification(eq(username), eq("upload-fail"), any(String.class));
+        verify(sseNotificationAdapter).sendNotification(eq(username), eq("upload-fail"), any(String.class));
     }
 }
