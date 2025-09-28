@@ -51,11 +51,30 @@ public class SecurityConfiguration {
     public RSAPublicKey rsaPublicKey(@Value("${config.jwt.public.key}") String keyString) throws Exception {
         String finalKeyString;
         if (keyString.startsWith("classpath:")) {
-            // local 프로필: classpath에서 파일 읽기
             Resource resource = new ClassPathResource(keyString.substring("classpath:".length()));
             finalKeyString = new String(FileCopyUtils.copyToByteArray(resource.getInputStream()), StandardCharsets.UTF_8);
         } else {
-            // prod 프로필: yml을 통해 주입된 키 내용 자체를 사용
+            finalKeyString = keyString;
+        }
+
+        String publicKeyPEM = finalKeyString
+                .replaceAll("-{5}BEGIN PUBLIC KEY-{5}", "")
+                .replaceAll("-{5}END PUBLIC KEY-{5}", "")
+                .replaceAll("\\s", "");
+
+        byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
+        return (RSAPublicKey) keyFactory.generatePublic(keySpec);
+    }
+
+    @Bean
+    public RSAPrivateKey rsaPrivateKey(@Value("${config.jwt.private.key}") String keyString) throws Exception {
+        String finalKeyString;
+        if (keyString.startsWith("classpath:")) {
+            Resource resource = new ClassPathResource(keyString.substring("classpath:".length()));
+            finalKeyString = new String(FileCopyUtils.copyToByteArray(resource.getInputStream()), StandardCharsets.UTF_8);
+        } else {
             finalKeyString = keyString;
         }
 
@@ -64,10 +83,10 @@ public class SecurityConfiguration {
                 .replaceAll("-{5}END PRIVATE KEY-{5}", "")
                 .replaceAll("\\s", "");
 
-        byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
+        byte[] encoded = Base64.getDecoder().decode(privateKeyPEM);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
-        return (RSAPublicKey) keyFactory.generatePublic(keySpec);
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
+        return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
     }
 
     @Bean
@@ -104,30 +123,6 @@ public class SecurityConfiguration {
 
 
         return http.build();
-    }
-
-
-    @Bean
-    public RSAPrivateKey rsaPrivateKey(@Value("${config.jwt.private.key}") String keyString) throws Exception {
-        String finalKeyString;
-        if (keyString.startsWith("classpath:")) {
-            // local 프로필: classpath에서 파일 읽기
-            Resource resource = new ClassPathResource(keyString.substring("classpath:".length()));
-            finalKeyString = new String(FileCopyUtils.copyToByteArray(resource.getInputStream()), StandardCharsets.UTF_8);
-        } else {
-            // prod 프로필: yml을 통해 주입된 키 내용 자체를 사용
-            finalKeyString = keyString;
-        }
-
-        String privateKeyPEM = finalKeyString
-                .replaceAll("-{5}BEGIN PRIVATE KEY-{5}", "")
-                .replaceAll("-{5}END PRIVATE KEY-{5}", "")
-                .replaceAll("\\s", "");
-
-        byte[] encoded = Base64.getDecoder().decode(privateKeyPEM);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
-        return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
     }
 
     @Bean
