@@ -1,22 +1,50 @@
 # docker-compose.yml
 
 services:
-
-  # --- PostgreSQL DB 서비스 추가 ---
-  db:
-    image: postgres:15-alpine  # PostgreSQL 15 버전 이미지 사용
-    container_name: music-library-db # 컨테이너 이름 설정
-    restart: always # 컨테이너가 꺼지면 자동으로 다시 시작
-    environment:
-      - POSTGRES_USER=yaysfan      # 유저 이름
-      - POSTGRES_PASSWORD=1234     # 비밀번호
-      - POSTGRES_DB=music          # DB 이름
+  # --- Nginx Reverse Proxy 서비스 추가 ---
+  nginx:
+    image: nginx:latest
+    container_name: music-library-nginx
+    restart: always
     ports:
-      - "5432:5432" # 내 PC의 5432 포트와 컨테이너의 5432 포트를 연결
+      - "80:80"   # 외부의 80번 포트를 Nginx의 80번 포트로 연결
+      - "443:443" # (나중에 HTTPS 적용 시 사용)
     volumes:
-      - postgres-data:/var/lib/postgresql/data # DB 데이터를 내 PC에 저장하여 컨테이너가 삭제돼도 유지
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf # 로컬의 nginx 설정을 컨테이너에 연결
+      - ./dist:/usr/share/nginx/html             # 로컬의 프론트엔드 빌드 결과물을 컨테이너에 연결
+    depends_on:
+      - app
+      -
+  # --- Spring Boot Application 서비스 추가 ---
+  app:
+    build: .
+    container_name: music-library-app
+    restart: always
+    depends_on:
+      - db
+      - redis
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/music
+      - SPRING_DATASOURCE_USERNAME=yaysfan
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
 
+  # --- PostgreSQL DB 서비스 ---
+  db:
+    image: postgres:15-alpine
+    container_name: music-library-db
+    restart: always
+    environment:
+      - POSTGRES_USER=yaysfan
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=music
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
 
+  # --- Redis 서비스 ---
   redis:
     image: redis:7-alpine
     container_name: music-library-redis
@@ -24,21 +52,6 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
-
-  controller:
-    image: ngrinder/controller
-    restart: always
-    ports:
-      - "9000:80"
-      - "16001:16001"
-      - "12000-12009:12000-12009"
-    volumes:
-      - ./ngrinder-controller:/opt/ngrinder-controller
-  agent:
-    image: ngrinder/agent
-    restart: always
-    links:
-      - controller
 
 volumes:
   postgres-data:
