@@ -59,10 +59,10 @@ public class SecurityConfiguration {
             finalKeyString = keyString;
         }
 
-        String publicKeyPEM = finalKeyString
-                .replace("-----BEGIN PUBLIC KEY-----", "")
-                .replaceAll("\\s", "")
-                .replace("-----END PUBLIC KEY-----", "");
+        String privateKeyPEM = finalKeyString
+                .replaceAll("-{5}BEGIN PRIVATE KEY-{5}", "")
+                .replaceAll("-{5}END PRIVATE KEY-{5}", "")
+                .replaceAll("\\s", "");
 
         byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
@@ -120,9 +120,9 @@ public class SecurityConfiguration {
         }
 
         String privateKeyPEM = finalKeyString
-                .replace("-----BEGIN PRIVATE KEY-----", "")
-                .replaceAll("\\s", "")
-                .replace("-----END PRIVATE KEY-----", "");
+                .replaceAll("-{5}BEGIN PRIVATE KEY-{5}", "")
+                .replaceAll("-{5}END PRIVATE KEY-{5}", "")
+                .replaceAll("\\s", "");
 
         byte[] encoded = Base64.getDecoder().decode(privateKeyPEM);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
