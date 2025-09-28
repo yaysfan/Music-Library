@@ -1,64 +1,46 @@
-  spring:
-    profiles:
-      active: local
-      include: oauth
-    datasource:
-      url: jdbc:postgresql://localhost:5432/music
-      username: yaysfan
-      password: 1234
-      driver-class-name: org.postgresql.Driver
-      hikari:
-        maximum-pool-size: 10
-    servlet:
-      multipart:
-        max-file-size: 15MB
-        max-request-size: 15MB
-    jpa:
+# 모든 환경에 적용되는 공통 설정 + 기본 프로필 지정
+spring:
+  profiles:
+    # 별도 설정이 없으면 항상 'local' 프로필을 활성화
+    active: local
+    include: oauth
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
       hibernate:
-        ddl-auto: update
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.PostgreSQLDialect
-          format_sql: true
-      show-sql: false
-  springdoc:
-    swagger-ui:
-      enabled: true
-      path: /swagger-ui.html
-    api-docs.path: /api-docs
-  org:
-    jobrunr:
-      background-job-server:
-        enabled: false
-      dashboard:
-        enabled: false
-  config:
-    file:
-      base-path: "./songs"
-    yt-dlp:
-      ffmpeg-directory: "C:\\ffmpeg-8.0-essentials_build\\bin"
-      path: "C:\\ffmpeg-8.0-essentials_build\\bin\\yt-dlp.exe"
-    jwt:
-      private:
-        key: classpath:app.key
-      public:
-        key: classpath:app.pub
-      expiration: 86400 # in seconds
-    jobs:
-      clear-songs:
-        cron: "*/15 * * * *" # every 15 minutes, see https://crontab.guru
-  data:
-    redis:
-      host: localhost
-      port: 6379
-  logging:
-    level:
-      org.hibernate.SQL: info
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: "*" # 모든 actuator 엔드포인트를 열기 (개발/테스트용)
-    endpoint:
-      health:
-        show-details: always
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  api-docs.path: /api-docs
+org:
+  jobrunr:
+    background-job-server:
+      enabled: false
+    dashboard:
+      enabled: false
+config:
+  jobs:
+    clear-songs:
+      cron: "*/15 * * * *"
+  jwt:
+    expiration: 86400 # in seconds
+logging:
+  level:
+    org.hibernate.SQL: info
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

@@ -5,15 +5,20 @@ spring:
     username: yaysfan
     password: 1234
     driver-class-name: org.postgresql.Driver
-
-data:
-  redis:
-    host: localhost
-    port: 6379
-
+    hikari:
+      maximum-pool-size: 10
 config:
+  file:
+    base-path: "./songs"
+  yt-dlp:
+    ffmpeg-directory: "C:\\ffmpeg-8.0-essentials_build\\bin"
+    path: "C:\\ffmpeg-8.0-essentials_build\\bin\\yt-dlp.exe"
   jwt:
     private:
       key: classpath:app.key
     public:
       key: classpath:app.pub
+data:
+  redis:
+    host: localhost
+    port: 6379

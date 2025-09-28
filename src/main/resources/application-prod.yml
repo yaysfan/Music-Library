@@ -2,24 +2,18 @@
 spring:
   config:
     import: "aws-secretsmanager:music"
-
   datasource:
-    # import 가 'spring.datasource.username'과 'spring.datasource.password' 값을 자동으로 할당
-    url: jdbc:postgresql://your-rds-endpoint.ap-northeast-2.rds.amazonaws.com:5432/music
+    url: jdbc:postgresql://db:5432/music
     driver-class-name: org.postgresql.Driver
-
+    hikari:
+      maximum-pool-size: 10
 data:
   redis:
-    host: your-elasticache-endpoint.ap-northeast-2.cache.amazonaws.com
+    host: redis
     port: 6379
-
 config:
-  jwt:
-    private:
-      key: ${APP_KEY}
-    public:
-      key: ${APP_PUB}
-
+  file:
+    base-path: "/data/songs"
 aws:
   region:
     static: ap-northeast-2

@@ -9,8 +9,6 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -28,47 +26,23 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthen
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.nio.charset.StandardCharsets;
-import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
-import java.util.Base64;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity()
 public class SecurityConfiguration {
+    @Value("${config.jwt.public.key}")
+    RSAPublicKey publicKey;
 
-    @Bean
-    public RSAPublicKey rsaPublicKey(@Value("${config.jwt.public.key}") String keyString) throws Exception {
-        String finalKeyString;
-        if (keyString.startsWith("classpath:")) {
-            // local 프로필: classpath에서 파일 읽기
-            Resource resource = new ClassPathResource(keyString.substring("classpath:".length()));
-            finalKeyString = new String(FileCopyUtils.copyToByteArray(resource.getInputStream()), StandardCharsets.UTF_8);
-        } else {
-            // prod 프로필: yml을 통해 주입된 키 내용 자체를 사용
-            finalKeyString = keyString;
-        }
-
-        String publicKeyPEM = finalKeyString
-                .replace("-----BEGIN PUBLIC KEY-----", "")
-                .replaceAll("\\n", "")
-                .replace("-----END PUBLIC KEY-----", "");
-
-        byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
-        return (RSAPublicKey) keyFactory.generatePublic(keySpec);
-    }
+    @Value("${config.jwt.private.key}")
+    RSAPrivateKey privateKey;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -106,41 +80,26 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-
     @Bean
-    public RSAPrivateKey rsaPrivateKey(@Value("${config.jwt.private.key}") String keyString) throws Exception {
-        String finalKeyString;
-        if (keyString.startsWith("classpath:")) {
-            // local 프로필: classpath에서 파일 읽기
-            Resource resource = new ClassPathResource(keyString.substring("classpath:".length()));
-            finalKeyString = new String(FileCopyUtils.copyToByteArray(resource.getInputStream()), StandardCharsets.UTF_8);
-        } else {
-            // prod 프로필: yml을 통해 주입된 키 내용 자체를 사용
-            finalKeyString = keyString;
-        }
-
-        String privateKeyPEM = finalKeyString
-                .replace("-----BEGIN PRIVATE KEY-----", "")
-                .replaceAll("\\n", "")
-                .replace("-----END PRIVATE KEY-----", "");
-
-        byte[] encoded = Base64.getDecoder().decode(privateKeyPEM);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
-        return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
-    }
-
-    @Bean
-    JwtDecoder jwtDecoder(RSAPublicKey publicKey) {
+    JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(publicKey).build();
     }
 
-
     @Bean
-    JwtEncoder jwtEncoder(RSAPublicKey publicKey, RSAPrivateKey privateKey) {
+    JwtEncoder jwtEncoder() {
         JWK jwk = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
+    }
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        grantedAuthoritiesConverter.setAuthorityPrefix("");
+
+        JwtAuthenticationConverter authConverter = new JwtAuthenticationConverter();
+        authConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return authConverter;
     }
 
     @Bean
