@@ -14,6 +14,9 @@ data:
 config:
   file:
     base-path: "/data/songs"
+  yt-dlp:
+    ffmpeg-directory: "/usr/bin"
+    path: "/usr/local/bin/yt-dlp"
 aws:
   region:
     static: ap-northeast-2

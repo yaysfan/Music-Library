@@ -4,7 +4,9 @@ WORKDIR /app
 COPY . .
 RUN chmod +x ./mvnw
 RUN ./mvnw clean package -DskipTests
-
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip ffmpeg && \
+    pip3 install yt-dlp
 # 2. Run Stage: 빌드된 JAR 파일을 실행하는 최종 이미지를 만듭니다.
 FROM eclipse-temurin:17-jre
 WORKDIR /app
