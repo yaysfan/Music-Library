@@ -1,0 +1,19 @@
+#  로컬 환경(local profile)에서만 적용되는 설정
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/music
+    username: yaysfan
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+
+data:
+  redis:
+    host: localhost
+    port: 6379
+
+config:
+  jwt:
+    private:
+      key: classpath:app.key
+    public:
+      key: classpath:app.pub

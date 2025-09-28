@@ -1,5 +1,6 @@
   spring:
     profiles:
+      active: local
       include: oauth
     datasource:
       url: jdbc:postgresql://localhost:5432/music

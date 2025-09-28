@@ -1,0 +1,25 @@
+#  운영 환경(prod profile)에서만 적용되는 설정
+spring:
+  config:
+    import: "aws-secretsmanager:music"
+
+  datasource:
+    # import 가 'spring.datasource.username'과 'spring.datasource.password' 값을 자동으로 할당
+    url: jdbc:postgresql://your-rds-endpoint.ap-northeast-2.rds.amazonaws.com:5432/music
+    driver-class-name: org.postgresql.Driver
+
+data:
+  redis:
+    host: your-elasticache-endpoint.ap-northeast-2.cache.amazonaws.com
+    port: 6379
+
+config:
+  jwt:
+    private:
+      key: ${APP_KEY}
+    public:
+      key: ${APP_PUB}
+
+aws:
+  region:
+    static: ap-northeast-2
