@@ -61,7 +61,7 @@ public class SecurityConfiguration {
 
         String publicKeyPEM = finalKeyString
                 .replace("-----BEGIN PUBLIC KEY-----", "")
-                .replaceAll("\\n", "")
+                .replaceAll("\\s", "")
                 .replace("-----END PUBLIC KEY-----", "");
 
         byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
@@ -121,7 +121,7 @@ public class SecurityConfiguration {
 
         String privateKeyPEM = finalKeyString
                 .replace("-----BEGIN PRIVATE KEY-----", "")
-                .replaceAll("\\n", "")
+                .replaceAll("\\s", "")
                 .replace("-----END PRIVATE KEY-----", "");
 
         byte[] encoded = Base64.getDecoder().decode(privateKeyPEM);
