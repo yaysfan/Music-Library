@@ -17,6 +17,7 @@ config:
   yt-dlp:
     ffmpeg-directory: "/usr/bin"
     path: "/usr/local/bin/yt-dlp"
+    cookies-file: "/data/cookies.txt"
 aws:
   region:
     static: ap-northeast-2
