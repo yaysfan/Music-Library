@@ -7,10 +7,10 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
-data:
-  redis:
-    host: music-library-redis
-    port: 6379
+  data:
+    redis:
+      host: music-library-redis
+      port: 6379
 config:
   file:
     base-path: "/data/songs"
