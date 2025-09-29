@@ -18,6 +18,8 @@ services:
     depends_on:
       - db
       - redis
+    volumes:
+      - /home/ubuntu/cookies.txt:/data/cookies.txt
     environment:
       - SPRING_PROFILES_ACTIVE=prod
   db:
