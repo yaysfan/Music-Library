@@ -1,0 +1,56 @@
+# 워크플로우의 이름
+name: Deploy to AWS EC2
+
+# 언제 이 워크플로우를 실행할지 정의: main 브랜치에 push 이벤트가 발생했을 때
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  # build-and-deploy 라는 이름의 작업(job) 정의
+  build-and-deploy:
+    # 이 작업이 실행될 가상 환경 지정 (Ubuntu 최신 버전)
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 소스 코드 체크아웃
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      # 2. JDK 17 설정
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 3. Docker Hub 로그인 (이전에 등록한 Secrets 사용)
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 4. Docker 이미지 빌드 및 푸시
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          # ✅ [DOCKERHUB_ID]/[저장소이름]
+          tags: yaysfan/music-library:latest
+
+      # 5. EC2에 SSH로 접속하여 배포 실행
+      - name: Deploy to EC2 instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_EC2_HOST }}
+          username: ${{ secrets.AWS_EC2_USER }}
+          key: ${{ secrets.AWS_EC2_SSH_KEY }}
+          # EC2 서버에서 실행할 명령어들
+          script: |
+            cd ~/Music-Library
+            export DOCKER_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/music-library:latest
+            docker-compose pull app
+            docker-compose up -d --remove-orphans
+            docker image prune -a -f

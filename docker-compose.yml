@@ -10,9 +10,8 @@ services:
       - ./dist:/usr/share/nginx/html
     depends_on:
       - app
-
   app:
-    build: .
+    image: yaysfan/music-library:latest
     container_name: music-library-app
     restart: always
     depends_on:
