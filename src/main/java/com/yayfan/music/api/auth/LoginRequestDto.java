@@ -5,9 +5,9 @@ import lombok.*;
 
 @Value
 public class LoginRequestDto {
-    @NotBlank(message = "Username is required")
+    @NotBlank(message = "Username 을 입력해주세요")
     String username;
 
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "Password 을 입력해주세요")
     String password;
 }

@@ -7,14 +7,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Value
 public class NewSongRequestDto {
-    @NotNull(message = "Song name is required")
-    @Size(min = 1, max = 50, message = "Song name must be between 4 and 30 characters")
+    @NotNull(message = "Song 이름 을 입력해주세요")
+    @Size(min = 1, max = 50, message = "Song 이름은 최소 1글자에서 50글자여야 합니다")
     String name;
 
-    @NotNull(message = "Genre is required")
-    @Size(min = 1, max = 50, message = "Artist name must be between 4 and 30 characters")
+    @NotNull(message = "Genre 을 입력해주세요")
+    @Size(min = 1, max = 50, message = "Artist 이름은 최소 1글자에서 50글자여야 합니다")
     String genre;
 
-    @NotNull(message = "Song file is required")
+    @NotNull(message = "Song file 을 입력해주세요")
     MultipartFile file;
 }
