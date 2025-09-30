@@ -10,3 +10,8 @@ spring:
       region:
         auto: false
 
+config:
+  yt-dlp:
+    path: "dummy"
+    ffmpeg-directory: "dummy"
+    cookies-file: "dummy"
