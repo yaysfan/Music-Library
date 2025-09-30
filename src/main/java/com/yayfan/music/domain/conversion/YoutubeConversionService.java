@@ -7,11 +7,13 @@ import com.yayfan.music.domain.song.SongService;
 import com.yayfan.music.integration.conversion.YtDlpAdapter;
 import com.yayfan.music.integration.notification.SseNotificationAdapter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.concurrent.CompletableFuture;
 
+@Profile("!test")
 @RequiredArgsConstructor
 @Service
 public class YoutubeConversionService {

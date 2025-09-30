@@ -3,10 +3,11 @@ package com.yayfan.music.api.conversion;
 import com.yayfan.music.domain.conversion.YoutubeConversionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-
+@Profile("!test")
 @RestController
 @RequestMapping("/api/v1/conversion")
 @RequiredArgsConstructor

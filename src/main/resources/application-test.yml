@@ -10,7 +10,3 @@ spring:
       region:
         auto: false
 
-# 테스트 환경에서는 yt-dlp에 대한 더미(dummy) 경로를 제공합니다.
-config:
-  yt-dlp:
-    path: /usr/bin/yt-dlp
