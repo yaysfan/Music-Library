@@ -84,6 +84,7 @@ jobs:
           username: ${{ secrets.AWS_EC2_USER }}
           key: ${{ secrets.AWS_EC2_SSH_KEY }}
           script: |
+            sudo chown -R $USER:$USER ~/music-library-deploy
             cd ~/music-library-deploy
             export DOCKER_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/music-library:latest
             # .env 파일이 없다면 생성하고 변수 추가 (보안을 위해 secrets 사용 권장)
