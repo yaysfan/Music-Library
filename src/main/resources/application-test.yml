@@ -11,6 +11,8 @@ spring:
         auto: false
 
 config:
+  file:
+    base-path: "dummy" # YtDlpAdapter에서 사용하는 값
   yt-dlp:
     path: "dummy"
     ffmpeg-directory: "dummy"
