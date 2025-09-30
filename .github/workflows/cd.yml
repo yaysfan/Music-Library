@@ -55,9 +55,18 @@ jobs:
           host: ${{ secrets.AWS_EC2_HOST }}
           username: ${{ secrets.AWS_EC2_USER }}
           key: ${{ secrets.AWS_EC2_SSH_KEY }}
-          source: "docker-compose.yml,nginx/nginx.conf"
+          # ❗️ source와 target을 명확히 분리하여 각각 복사합니다.
+          source: "docker-compose.yml"
           target: "~/music-library-deploy"
-          strip_components: 1 # 'nginx/nginx.conf'에서 상위 'nginx/' 경로를 제거하고 복사
+
+      - name: Copy Nginx configuration to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.AWS_EC2_HOST }}
+          username: ${{ secrets.AWS_EC2_USER }}
+          key: ${{ secrets.AWS_EC2_SSH_KEY }}
+          source: "nginx/nginx.conf"
+          target: "~/music-library-deploy/nginx"
 
       # 7. EC2에 SSH로 접속하여 배포 스크립트 실행
       - name: Deploy to EC2 instance
