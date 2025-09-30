@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.concurrent.CompletableFuture;
 
-@Profile("!test")
 @RequiredArgsConstructor
 public class YoutubeConversionService {
 

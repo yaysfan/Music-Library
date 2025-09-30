@@ -13,7 +13,6 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-@Profile("!test")
 @Slf4j
 public class YtDlpAdapter {
 
