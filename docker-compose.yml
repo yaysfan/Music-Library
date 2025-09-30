@@ -18,6 +18,7 @@ services:
       - db
       - redis
     volumes:
+      - /home/ubuntu/songs:/data/songs
       - /home/ubuntu/cookies.txt:/data/cookies.txt
     environment:
       - SPRING_PROFILES_ACTIVE=prod
