@@ -15,7 +15,6 @@ import java.util.concurrent.CompletableFuture;
 
 @Profile("!test")
 @RequiredArgsConstructor
-@Service
 public class YoutubeConversionService {
 
     private final YtDlpAdapter ytDlpAdapter;

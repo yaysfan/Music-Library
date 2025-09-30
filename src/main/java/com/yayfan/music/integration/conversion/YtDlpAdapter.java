@@ -14,7 +14,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Profile("!test")
-@Component
 @Slf4j
 public class YtDlpAdapter {
 
