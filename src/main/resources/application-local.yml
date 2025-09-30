@@ -7,6 +7,10 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
+  data:
+    redis:
+      host: localhost
+      port: 6379
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -16,12 +20,9 @@ config:
   yt-dlp:
     ffmpeg-directory: "C:\\ffmpeg-8.0-essentials_build\\bin"
     path: "C:\\ffmpeg-8.0-essentials_build\\bin\\yt-dlp.exe"
+    cookies-file: "C:\\ffmpeg-8.0-essentials_build\\bin\\.cookies.txt"
   jwt:
     private:
       key: classpath:app.key
     public:
       key: classpath:app.pub
-data:
-  redis:
-    host: localhost
-    port: 6379
