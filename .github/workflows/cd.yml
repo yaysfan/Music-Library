@@ -37,7 +37,7 @@ jobs:
           push: true
           tags: yaysfan/music-library:latest
 
-      # 5. 서버에 배포 디렉터리 생성 (없을 경우 대비)
+      # 5. 서버에 배포 디렉터리 생성
       - name: Create directory on EC2
         uses: appleboy/ssh-action@master
         with:
@@ -46,7 +46,17 @@ jobs:
           key: ${{ secrets.AWS_EC2_SSH_KEY }}
           script: mkdir -p ~/music-library-deploy/nginx
 
-      # ✅ 6. docker-compose.yml 파일을 서버로 복사
+      # ✅ 6. [중요] 파일 복사 전, 디렉터리 소유권 먼저 변경
+      - name: Set directory permissions
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_EC2_HOST }}
+          username: ${{ secrets.AWS_EC2_USER }}
+          key: ${{ secrets.AWS_EC2_SSH_KEY }}
+          script: |
+            sudo chown -R $USER:$USER ~/music-library-deploy
+
+      # 7. docker-compose.yml 파일 복사
       - name: Copy docker-compose.yml to EC2
         uses: appleboy/scp-action@master
         with:
@@ -56,7 +66,7 @@ jobs:
           source: "docker-compose.yml"
           target: "~/music-library-deploy"
 
-      # ✅ 7. nginx.conf 파일을 서버의 nginx 디렉터리로 복사
+      # 8. nginx.conf 파일 복사
       - name: Copy Nginx configuration to EC2
         uses: appleboy/scp-action@master
         with:
@@ -66,17 +76,17 @@ jobs:
           source: "nginx/nginx.conf"
           target: "~/music-library-deploy/nginx"
 
-      # 'dist' 디렉터리 전체를 서버로 복사하는 단계를 추가
+      # 9. 'dist' 디렉터리 복사
       - name: Copy 'dist' directory to EC2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.AWS_EC2_HOST }}
           username: ${{ secrets.AWS_EC2_USER }}
           key: ${{ secrets.AWS_EC2_SSH_KEY }}
-          source: "dist/" # 'dist' 디렉터리 지정
+          source: "dist/"
           target: "~/music-library-deploy"
 
-      # 8. EC2에 SSH로 접속하여 배포 스크립트 실행
+      # 10. EC2에 SSH로 접속하여 배포 스크립트 실행
       - name: Deploy to EC2 instance
         uses: appleboy/ssh-action@master
         with:
@@ -84,10 +94,8 @@ jobs:
           username: ${{ secrets.AWS_EC2_USER }}
           key: ${{ secrets.AWS_EC2_SSH_KEY }}
           script: |
-            sudo chown -R $USER:$USER ~/music-library-deploy
             cd ~/music-library-deploy
             export DOCKER_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/music-library:latest
-            # .env 파일이 없다면 생성하고 변수 추가 (보안을 위해 secrets 사용 권장)
             if [ ! -f .env ]; then
               echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" > .env
               echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
