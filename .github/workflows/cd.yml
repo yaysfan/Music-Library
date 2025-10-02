@@ -3,11 +3,13 @@
 name: Deploy to AWS EC2
 
 on:
-  push:
+  pull_request:
     branches: [ "main" ]
+    types: [ closed ]
 
 jobs:
   build-and-deploy:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
